@@ -1,0 +1,5 @@
+_assetic:
+    resource: .
+    type: assetic
+_app:
+    resource: 'D:/wamp/www/gsr3/GSR3/app/config/routing_dev.yml'
