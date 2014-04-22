@@ -2,6 +2,9 @@ parameters:
 #    jmbermudo_sgr3.example.class: Jmbermudo\SGR3Bundle\Example
 
 services:
-#    jmbermudo_sgr3.example:
-#        class: %jmbermudo_sgr3.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+
+    jmbermudo_user.registration.form.type:
+        class: Jmbermudo\SGR3Bundle\Form\Type\RegistrationFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: jmbermudo_user_registration }

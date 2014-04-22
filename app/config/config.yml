@@ -4,7 +4,7 @@ imports:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: "%locale%" }
+    translator:      { fallback: "%locale%" }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -44,21 +44,43 @@ assetic:
 
 # Doctrine Configuration
 doctrine:
+            
     dbal:
-        driver:   "%database_driver%"
-        host:     "%database_host%"
-        port:     "%database_port%"
-        dbname:   "%database_name%"
-        user:     "%database_user%"
-        password: "%database_password%"
-        charset:  UTF8
-        # if using pdo_sqlite as your database driver, add the path in parameters.yml
-        # e.g. database_path: "%kernel.root_dir%/data/data.db3"
-        # path:     "%database_path%"
-
+        default_connection:       default
+        connections:
+            default:
+                driver:   "%database_driver%"
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database_name%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8
+            usuarios:
+                driver:   "%database_u_driver%"
+                host:     "%database_u_host%"
+                port:     "%database_u_port%"
+                dbname:   "%database_u_name%"
+                user:     "%database_u_user%"
+                password: "%database_u_password%"
+                charset:  UTF8
     orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
-        auto_mapping: true
+        default_entity_manager:   default
+        entity_managers:
+            default:
+                connection:       default
+                mappings:
+                    JmbermudoSGR3Bundle: ~
+                    FOSUserBundle: ~
+#                metadata_cache_driver: apc
+#                query_cache_driver: apc
+#                result_cache_driver: apc
+            usuarios:
+                connection:       usuarios
+                mappings:
+                    FOSUserBundle: ~
+        
+        
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -72,3 +94,16 @@ fos_user:
     db_driver: orm
     firewall_name: main #nombre del firewall creado en el archivo security.yml
     user_class: Jmbermudo\SGR3Bundle\Entity\Usuario
+    model_manager_name: default
+    #borrar una vez que se implante el sistema real de usuarios
+    registration:
+        form:
+            type: jmbermudo_user_registration
+    
+stof_doctrine_extensions:
+    default_locale: en_US
+
+    orm:
+        default:
+            timestampable: true
+            sluggable: true

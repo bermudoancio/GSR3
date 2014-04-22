@@ -1,0 +1,12 @@
+{% extends '::base.html.twig' %}
+
+
+{% block title %}Acme Demo Application{% endblock title %}
+
+{% block content %}
+    {{ parent() }}
+
+    {% block fos_user_content %}
+    {% endblock fos_user_content %}
+
+{% endblock content %}

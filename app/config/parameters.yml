@@ -3,12 +3,19 @@ parameters:
     database_driver: pdo_mysql
     database_host: 127.0.0.1
     database_port: null
-    database_name: symfony
+    database_name: sgr3
     database_user: root
     database_password: null
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
     mailer_password: null
-    locale: en
-    secret: ThisTokenIsNotSoSecretChangeIt
+    locale: es
+    secret: 82207543ac07d5233412a1f2acb8f2e6fdedb742
+    #Datos de la BBDD de usuarios
+    database_u_driver: pdo_mysql
+    database_u_host: 127.0.0.1
+    database_u_port: null
+    database_u_name: sgr3_login
+    database_u_user: root
+    database_u_password: null
