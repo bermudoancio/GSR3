@@ -176,6 +176,14 @@ el Equipo.
     'form.new_password' => 'Nueva contraseña:',
     'form.new_password_confirmation' => 'Repita la contraseña:',
   ),
+  'messages' => 
+  array (
+    'global.title' => 'Bienvenido a SGR3',
+    'login.title' => 'Login',
+    'login.email' => 'Usuario',
+    'login.password' => 'Contraseña',
+    'global.name' => 'SGR3',
+  ),
 ));
 
 

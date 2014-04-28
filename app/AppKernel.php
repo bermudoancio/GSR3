@@ -19,6 +19,9 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Jmbermudo\SGR3Bundle\JmbermudoSGR3Bundle(),
+            new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
+            // not required, but recommended for better extraction
+            new JMS\TranslationBundle\JMSTranslationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

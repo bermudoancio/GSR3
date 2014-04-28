@@ -29,7 +29,8 @@ class __TwigTemplate_49efcebc2c0404d29b4a0ff684b8ec5d0be1a72757bd171ec2813e6d865
     // line 4
     public function block_title($context, array $blocks = array())
     {
-        echo "Acme Demo Application";
+        echo "SGR3 ";
+        echo $this->env->getExtension('translator')->getTranslator()->trans("login.title", array(), "messages");
     }
 
     // line 6
@@ -67,6 +68,6 @@ class __TwigTemplate_49efcebc2c0404d29b4a0ff684b8ec5d0be1a72757bd171ec2813e6d865
 
     public function getDebugInfo()
     {
-        return array (  55 => 10,  52 => 9,  47 => 11,  45 => 9,  39 => 7,  36 => 6,  30 => 4,);
+        return array (  56 => 10,  53 => 9,  48 => 11,  46 => 9,  40 => 7,  37 => 6,  30 => 4,  104 => 50,  91 => 40,  80 => 32,  70 => 27,  63 => 23,  59 => 22,  55 => 20,  49 => 18,  47 => 17,  38 => 11,  31 => 6,  28 => 5,);
     }
 }
