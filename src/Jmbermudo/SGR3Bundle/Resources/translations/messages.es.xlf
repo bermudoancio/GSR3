@@ -22,6 +22,10 @@
                 <source>global.name</source>
                 <target>SGR3</target>
             </trans-unit>
+            <trans-unit id="6">
+                <source>global.homepage</source>
+                <target>Inicio</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

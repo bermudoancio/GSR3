@@ -7,3 +7,7 @@ $icon-font-path: "/sgr3/SGR3/web/css/fonts/bootstrap/";
 
 @import "bootstrap";
 
+//Corrección de estilos para el login, que haremos extensible para todo. Sin esto, falla en Firefox
+#loginbox .input-group {
+    clear: both;
+}

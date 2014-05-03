@@ -1,1 +1,10 @@
-Hello {{ name }}!
+{% extends '::base.html.twig' %}
+
+{% block title %}{% trans %}global.name{% endtrans %} - {% trans %}global.homepage{% endtrans %}{% endblock title %}
+
+{% block content %}
+    {{ parent() }}
+
+    Estás viendo la pantalla de index
+
+{% endblock content %}
