@@ -38,14 +38,14 @@
         
     </head>
     <body>
-                
+        
         <div id="wrapper">
         {% block body %}
             
         {% include "navegation.html.twig" %}
         
         
-        <div id="page-wrapper">
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}<div id="page-wrapper">{% endif %}
             {% for type, messages in app.session.flashbag.all() %}
                 {% for message in messages %}
                     <div class="flash-{{ type }}">
@@ -57,7 +57,7 @@
             {% block content %}
 
             {% endblock content%}
-        </div>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}</div>{% endif %}
             
             
         {% endblock body%}

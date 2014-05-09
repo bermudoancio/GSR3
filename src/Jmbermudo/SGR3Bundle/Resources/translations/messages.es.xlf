@@ -26,6 +26,43 @@
                 <source>global.homepage</source>
                 <target>Inicio</target>
             </trans-unit>
+            <trans-unit id="7">
+                <source>global.buscar</source>
+                <target>Buscar</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>global.editar</source>
+                <target>Editar</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>global.eliminar</source>
+                <target>Eliminar</target>
+            </trans-unit>
+            <trans-unit id="300">
+                <source>admin.recursos</source>
+                <target>Recursos</target>
+            </trans-unit>
+            <trans-unit id="301">
+                <source>admin.listarRecursos</source>
+                <target>Recursos disponibles</target>
+            </trans-unit>
+            <trans-unit id="302">
+                <source>admin.listadoRecursos.nombre</source>
+                <target>Nombre</target>
+            </trans-unit>
+            <trans-unit id="303">
+                <source>admin.listadoRecursos.id</source>
+                <target>Id Escuela</target>
+            </trans-unit>
+            <trans-unit id="304">
+                <source>admin.listadoRecursos.localizacion</source>
+                <target>Localización</target>
+            </trans-unit>
+            <trans-unit id="305">
+                <source>admin.listadoRecursos.responsable</source>
+                <target>Responsable</target>
+            </trans-unit>
+            
         </body>
     </file>
 </xliff>

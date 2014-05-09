@@ -36,6 +36,11 @@ class Usuario extends BaseUser
      * @ORM\Column(name="apellidos", type="string", length=255)
      */
     private $apellidos;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Recurso", mappedBy="responsable", cascade={"persist"})
+     */
+    private $responsable_de_recursos;
 
 
     /**
@@ -92,5 +97,45 @@ class Usuario extends BaseUser
     public function getApellidos()
     {
         return $this->apellidos;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->responsable_de_recursos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add responsable_de_recursos
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Recurso $responsableDeRecursos
+     * @return Usuario
+     */
+    public function addResponsableDeRecurso(\Jmbermudo\SGR3Bundle\Entity\Recurso $responsableDeRecursos)
+    {
+        $this->responsable_de_recursos[] = $responsableDeRecursos;
+
+        return $this;
+    }
+
+    /**
+     * Remove responsable_de_recursos
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Recurso $responsableDeRecursos
+     */
+    public function removeResponsableDeRecurso(\Jmbermudo\SGR3Bundle\Entity\Recurso $responsableDeRecursos)
+    {
+        $this->responsable_de_recursos->removeElement($responsableDeRecursos);
+    }
+
+    /**
+     * Get responsable_de_recursos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getResponsableDeRecursos()
+    {
+        return $this->responsable_de_recursos;
     }
 }

@@ -9,11 +9,13 @@
     <a class="navbar-brand" href="#">{% trans %}global.name{% endtrans %}</a>
     </div>
 
+    {# menús privados ocultos a usuarios no logados #}
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+     
     <ul class="nav navbar-top-links navbar-right">
         <!-- /.dropdown -->
 
-        {# menús privados ocultos a usuarios no logados #}
-        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -153,9 +155,7 @@
             <!-- /.dropdown-alerts -->
         </li>
         <!-- /.dropdown -->
-        {% endif %}
-        {# Fin de menús privados ocultos a no identificados #}
-
+        
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -186,6 +186,7 @@
     </ul>
     <!-- /.navbar-top-links -->
     
+       
     <div class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav" id="side-menu">
@@ -199,4 +200,8 @@
         </div>
         <!-- /.sidebar-collapse -->
     </div>
+    
+    {% endif %}
+    {# Fin de menús privados ocultos a no identificados #}
+    
 </nav>
