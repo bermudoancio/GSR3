@@ -1,0 +1,32 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{% trans %}global.name{% endtrans %} - {% trans %}admin.listarRecursos{% endtrans %}{% endblock title %}
+
+{% block content %}
+    {{ parent() }}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {% trans %}admin.recursos{% endtrans %}
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="row">
+                        {{ form(form) }}
+                    </div>
+                    
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+        
+        <a href="{{ path('recurso') }}" class="btn btn-info"><i class="glyphicon glyphicon-backward"></i> {% trans %}global.volver{% endtrans %}</a>
+        
+    </div>
+    <!-- /.row -->
+
+{% endblock %}

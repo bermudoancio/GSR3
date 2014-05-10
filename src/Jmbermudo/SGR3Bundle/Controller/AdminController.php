@@ -17,4 +17,9 @@ class AdminController extends Controller
             'recursos' => $recursos,
         ));
     }
+    
+    public function addRecursoAction()
+    {
+        
+    }
 }

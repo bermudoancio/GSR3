@@ -195,6 +195,14 @@
                     <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> {% trans %}global.homepage{% endtrans %}</a>
                 </li>
                 
+                {% if is_granted("ROLE_ADMIN") %}
+                
+                <li>
+                    <a href="{{ path('recurso') }}"><i class="fa fa-building-o fa-fw"></i> {% trans %}admin.recursos{% endtrans %}</a>
+                </li>
+                
+                {% endif %}
+                
             </ul>
             <!-- /#side-menu -->
         </div>

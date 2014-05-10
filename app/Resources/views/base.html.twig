@@ -14,9 +14,9 @@
             <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
             
-        {% stylesheets 'bundles/jmbermudosgr3/css/sbadmin/plugins/timeline/timeline.css' filter='cssrewrite' %}
+{#        {% stylesheets 'bundles/jmbermudosgr3/css/sbadmin/plugins/timeline/timeline.css' filter='cssrewrite' %}
             <link rel="stylesheet" href="{{ asset_url }}" />
-        {% endstylesheets %}
+        {% endstylesheets %}#}
             
         {# La hoja de estilos del dashboard tiene que incluirse después de los plugins #}
         {% stylesheets 'bundles/jmbermudosgr3/css/sbadmin/*' filter='cssrewrite' %}
@@ -54,9 +54,18 @@
                 {% endfor %}
             {% endfor %}
 
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{ block('title') }}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
             {% block content %}
 
             {% endblock content%}
+                    
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}</div>{% endif %}
             
             

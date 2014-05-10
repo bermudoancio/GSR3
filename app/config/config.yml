@@ -28,6 +28,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - "JmbermudoSGR3Bundle:Form:fields.html.twig"
 
 # Assetic Configuration
 assetic:

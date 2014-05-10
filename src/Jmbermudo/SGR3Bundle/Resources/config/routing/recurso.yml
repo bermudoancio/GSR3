@@ -1,0 +1,30 @@
+recurso:
+    pattern:  /
+    defaults: { _controller: "JmbermudoSGR3Bundle:Recurso:index" }
+
+recurso_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "JmbermudoSGR3Bundle:Recurso:show" }
+
+recurso_new:
+    pattern:  /new
+    defaults: { _controller: "JmbermudoSGR3Bundle:Recurso:new" }
+
+recurso_create:
+    pattern:  /create
+    defaults: { _controller: "JmbermudoSGR3Bundle:Recurso:create" }
+    requirements: { _method: post }
+
+recurso_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "JmbermudoSGR3Bundle:Recurso:edit" }
+
+recurso_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "JmbermudoSGR3Bundle:Recurso:update" }
+    requirements: { _method: post|put }
+
+recurso_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "JmbermudoSGR3Bundle:Recurso:delete" }
+    requirements: { _method: post|delete }

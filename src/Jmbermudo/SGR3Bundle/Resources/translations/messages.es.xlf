@@ -38,6 +38,18 @@
                 <source>global.eliminar</source>
                 <target>Eliminar</target>
             </trans-unit>
+            <trans-unit id="10">
+                <source>global.mostrar</source>
+                <target>Mostrar</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>global.volver</source>
+                <target>Volver</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>global.crear</source>
+                <target>Crear</target>
+            </trans-unit>
             <trans-unit id="300">
                 <source>admin.recursos</source>
                 <target>Recursos</target>
@@ -62,6 +74,15 @@
                 <source>admin.listadoRecursos.responsable</source>
                 <target>Responsable</target>
             </trans-unit>
+            <trans-unit id="306">
+                <source>admin.listadoRecursos.add</source>
+                <target>Añadir un nuevo recurso</target>
+            </trans-unit>
+            <trans-unit id="307">
+                <source>admin.listadoRecursos.noSeEncuentra</source>
+                <target>No se encuentra el recurso buscado</target>
+            </trans-unit>
+           
             
         </body>
     </file>
