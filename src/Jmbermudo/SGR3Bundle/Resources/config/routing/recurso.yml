@@ -1,4 +1,4 @@
-recurso:
+recurso_index:
     pattern:  /
     defaults: { _controller: "JmbermudoSGR3Bundle:Recurso:index" }
 

@@ -67,7 +67,7 @@ class RecursoController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => $this->get('translator')->trans('global.crear')));
 
         return $form;
     }
@@ -201,7 +201,7 @@ class RecursoController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('recurso'));
+        return $this->redirect($this->generateUrl('recurso_index'));
     }
 
     /**
@@ -216,7 +216,7 @@ class RecursoController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('recurso_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => ' <span class="glyphicon glyphicon-star"></span> ' . $this->get('translator')->trans('global.eliminar')))
+            ->add('submit', 'submit', array('label' => $this->get('translator')->trans('global.eliminar')))
             ->getForm()
         ;
     }

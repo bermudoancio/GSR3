@@ -2,6 +2,17 @@
 
 {% block title %}{% trans %}global.name{% endtrans %} - {% trans %}admin.listarRecursos{% endtrans %}{% endblock title %}
 
+{% block javascripts_bottom %}
+    {{ parent() }}
+    
+    <script type="text/javascript" src="{{ asset('bundles/jmbermudosgr3/js/i18n/' ~ app.request.locale ~ '.js' ) }}" ></script>
+
+    {% javascripts 'bundles/jmbermudosgr3/js/_pages/admin/editarRecurso.js'%}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
 {% block content %}
     {{ parent() }}
 
@@ -25,7 +36,7 @@
                             <div class="form-group">
                             {{ form_start(delete_form) }}
                                 {{ form_errors(delete_form) }}
-                                {{ form_widget(delete_form.submit, {'attr': {'class': 'btn btn-warning'}}) }}
+                                {{ form_widget(delete_form.submit, {'attr': {'class': 'btn btn-warning', 'onsubmit': 'alert(\'hola\')'}}) }}
 
                             {{ form_end(delete_form) }}
                             </div>
@@ -39,7 +50,7 @@
         </div>
         <!-- /.col-lg-12 -->
         
-        <a href="{{ path('recurso') }}" class="btn btn-info"><i class="glyphicon glyphicon-backward"></i> {% trans %}global.volver{% endtrans %}</a>
+        <a href="{{ path('recurso_index') }}" class="btn btn-info"><i class="glyphicon glyphicon-backward"></i> {% trans %}global.volver{% endtrans %}</a>
         
     </div>
     <!-- /.row -->

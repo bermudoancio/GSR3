@@ -196,9 +196,9 @@
                 </li>
                 
                 {% if is_granted("ROLE_ADMIN") %}
-                
+                {# Incluir aquí todos los accesos a menús de ámbito administrativo #}
                 <li>
-                    <a href="{{ path('recurso') }}"><i class="fa fa-building-o fa-fw"></i> {% trans %}admin.recursos{% endtrans %}</a>
+                    <a href="{{ path('recurso_index') }}"><i class="fa fa-building-o fa-fw"></i> {% trans %}admin.recursos{% endtrans %}</a>
                 </li>
                 
                 {% endif %}
