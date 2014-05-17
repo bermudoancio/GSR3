@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="es" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>reunion.nombre.not_blank</source>
+                <target>La reunión debe tener un nombre</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>reunion.prereservas.min</source>
+                <target>Debes seleccionar al menos 1 pre-reserva</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>reunion.prereservas.max</source>
+                <target>No puedes seleccionar más de {{ limit }} pre-reservas</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>reunion.invitados.min</source>
+                <target>Debes invitar al menos a una persona</target>
+            </trans-unit>
+            
+        </body>
+    </file>
+</xliff>

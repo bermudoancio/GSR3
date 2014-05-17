@@ -3,6 +3,7 @@
 namespace Jmbermudo\SGR3Bundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Jmbermudo\SGR3Bundle\Entity\Usuario;
 
 /**
  * UsuarioRepository
@@ -12,4 +13,18 @@ use Doctrine\ORM\EntityRepository;
  */
 class UsuarioRepository extends EntityRepository
 {
+    public function getReunionesActivas($idUsuario)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT COUNT(r)
+            FROM JmbermudoSGR3Bundle:Reunion r
+            WHERE r.creador = :creador
+            AND r.anulada = false'
+        )->setParameter('creador', $idUsuario);
+        
+        $reuniones = $query->getSingleScalarResult();
+        
+        return $reuniones;
+    }
 }

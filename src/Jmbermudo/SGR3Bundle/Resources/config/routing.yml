@@ -5,6 +5,10 @@ jmbermudo_sgr3_homepage:
 JmbermudoSGR3Bundle_recurso:
     resource: "@JmbermudoSGR3Bundle/Resources/config/routing/recurso.yml"
     prefix:   /admin/recurso
+    
+JmbermudoSGR3Bundle_reunion:
+    resource: "@JmbermudoSGR3Bundle/Resources/config/routing/reunion.yml"
+    prefix:   /reuniones
 
 jmbermudo_sgr3_admin_listar_recursos:
     path:   /admin/listarRecursos

@@ -82,6 +82,18 @@
                 <source>admin.listadoRecursos.noSeEncuentra</source>
                 <target>No se encuentra el recurso buscado</target>
             </trans-unit>
+            <trans-unit id="500">
+                <source>reunion.nuevaReunion</source>
+                <target>Nueva reunión</target>
+            </trans-unit>
+            <trans-unit id="501">
+                <source>reunion.max_reuniones_superado</source>
+                <target>No se puede crear la reunión porque se ha superado el límite permitido</target>
+            </trans-unit>
+            <trans-unit id="502">
+                <source>reunion.creacion_ok</source>
+                <target>La reunión se ha creado correctamente</target>
+            </trans-unit>
            
             
         </body>

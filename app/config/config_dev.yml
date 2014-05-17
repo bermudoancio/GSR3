@@ -34,3 +34,8 @@ assetic:
 
 #swiftmailer:
 #    delivery_address: me@example.com
+
+parameters:
+    max_reuniones:              5
+    max_pre_reservas_reunion:   4
+    max_pre_reservas_total:     20

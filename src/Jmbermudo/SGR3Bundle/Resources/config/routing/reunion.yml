@@ -1,0 +1,30 @@
+reunion_index:
+    pattern:  /
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:index" }
+
+reunion_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:show" }
+
+reunion_new:
+    pattern:  /new
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:new" }
+
+reunion_create:
+    pattern:  /create
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:create" }
+    requirements: { _method: post }
+
+reunion_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:edit" }
+
+reunion_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:update" }
+    requirements: { _method: post|put }
+
+reunion_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:delete" }
+    requirements: { _method: post|delete }

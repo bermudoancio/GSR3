@@ -41,6 +41,16 @@ class Usuario extends BaseUser
      * @ORM\OneToMany(targetEntity="Recurso", mappedBy="responsable", cascade={"persist"})
      */
     private $responsable_de_recursos;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Reunion", mappedBy="creador", cascade={"persist"})
+     */
+    private $creador_de_reuniones;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Reunion", mappedBy="invitados")
+     **/
+    private $reuniones;
 
 
     /**
@@ -137,5 +147,71 @@ class Usuario extends BaseUser
     public function getResponsableDeRecursos()
     {
         return $this->responsable_de_recursos;
+    }
+
+    /**
+     * Add creador_de_reuniones
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Reunion $creadorDeReuniones
+     * @return Usuario
+     */
+    public function addCreadorDeReunione(\Jmbermudo\SGR3Bundle\Entity\Reunion $creadorDeReuniones)
+    {
+        $this->creador_de_reuniones[] = $creadorDeReuniones;
+
+        return $this;
+    }
+
+    /**
+     * Remove creador_de_reuniones
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Reunion $creadorDeReuniones
+     */
+    public function removeCreadorDeReunione(\Jmbermudo\SGR3Bundle\Entity\Reunion $creadorDeReuniones)
+    {
+        $this->creador_de_reuniones->removeElement($creadorDeReuniones);
+    }
+
+    /**
+     * Get creador_de_reuniones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCreadorDeReuniones()
+    {
+        return $this->creador_de_reuniones;
+    }
+
+    /**
+     * Add reuniones
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Reunion $reuniones
+     * @return Usuario
+     */
+    public function addReunione(\Jmbermudo\SGR3Bundle\Entity\Reunion $reuniones)
+    {
+        $this->reuniones[] = $reuniones;
+
+        return $this;
+    }
+
+    /**
+     * Remove reuniones
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Reunion $reuniones
+     */
+    public function removeReunione(\Jmbermudo\SGR3Bundle\Entity\Reunion $reuniones)
+    {
+        $this->reuniones->removeElement($reuniones);
+    }
+
+    /**
+     * Get reuniones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getReuniones()
+    {
+        return $this->reuniones;
     }
 }

@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{% trans %}global.name{% endtrans %} - {% trans %}admin.listarRecursos{% endtrans %}{% endblock title %}
+
+{% block body -%}
+    <h1>Reunion edit</h1>
+
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('reunion') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
