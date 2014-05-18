@@ -75,19 +75,7 @@ class ReunionController extends Controller
                     'success', $this->get('translator')->trans('reunion.creacion_ok')
             );
             
-            //Avisamos por email al creador
-            $message = \Swift_Message::newInstance()
-                ->setSubject($this->get('translator')->trans('reunion.creacion_ok'))
-                ->setFrom('soy.amarillo@gmail.com')
-                ->setTo($this->getUser()->getEmail())
-                ->setBody(
-                    $this->renderView(
-                        'JmbermudoSGR3Bundle:Reunion:email_admin_' . $request->getLocale() . '.txt.twig',
-                        array('nombre' => $entity->getNombrePublico())
-                    )
-                );
-            
-            $this->get('mailer')->send($message);
+            $this->avisaCreacionOk($entity, $request);
 
             return $this->redirect($this->generateUrl('reunion_show', array('id' => $entity->getId())));
         }
@@ -96,6 +84,41 @@ class ReunionController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
         ));
+    }
+    
+    private function avisaCreacionOk(Reunion $entity, Request $request)
+    {
+        //Avisamos por email al creador
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->get('translator')->trans('reunion.creacion_ok'))
+            ->setFrom($this->container->getParameter('mailer_user'))
+            ->setTo($entity->getCreador()->getEmail())
+            ->setBody(
+                $this->renderView(
+                    'JmbermudoSGR3Bundle:Reunion:email_admin_' . $request->getLocale() . '.txt.twig',
+                    array('nombre' => $entity->getNombrePublico())
+                )
+            );            
+        $this->get('mailer')->send($message);
+
+        //Y a todos los participantes
+        foreach ($entity->getInvitados() as $invitado) {
+            $message = \Swift_Message::newInstance()
+                ->setSubject($this->get('translator')->trans('reunion.creacion_ok'))
+                ->setFrom($this->container->getParameter('mailer_user'))
+                ->setTo($invitado->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'JmbermudoSGR3Bundle:Reunion:email_invitado_' . $request->getLocale() . '.txt.twig',
+                        array('nombre' => $entity->getNombrePublico(),
+                            'invitado' => $invitado->getNombre(),
+                            'creador' => $entity->getCreador(),
+                            'enlace' => ''
+                                )
+                    )
+                );            
+            $this->get('mailer')->send($message);
+        }
     }
 
     /**
@@ -258,7 +281,7 @@ class ReunionController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('reunion'));
+        return $this->redirect($this->generateUrl('reunion_index'));
     }
 
     /**

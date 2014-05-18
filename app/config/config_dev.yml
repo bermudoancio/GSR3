@@ -39,3 +39,4 @@ parameters:
     max_reuniones:              5
     max_pre_reservas_reunion:   4
     max_pre_reservas_total:     20
+    duracion_reunion:           10

@@ -50,6 +50,10 @@
                 <source>global.crear</source>
                 <target>Crear</target>
             </trans-unit>
+            <trans-unit id="13">
+                <source>global.acciones</source>
+                <target>Acciones</target>
+            </trans-unit>
             <trans-unit id="300">
                 <source>admin.recursos</source>
                 <target>Recursos</target>
@@ -93,6 +97,42 @@
             <trans-unit id="502">
                 <source>reunion.creacion_ok</source>
                 <target>La reunión se ha creado correctamente</target>
+            </trans-unit>
+            <trans-unit id="503">
+                <source>reunion.modificarReunion</source>
+                <target>Modificar reunión</target>
+            </trans-unit>
+            <trans-unit id="504">
+                <source>reunion.mis_reuniones</source>
+                <target>Mis reuniones creadas</target>
+            </trans-unit>
+            <trans-unit id="505">
+                <source>reunion.sin_reuniones</source>
+                <target>No has creado ninguna reunión</target>
+            </trans-unit>
+            <trans-unit id="506">
+                <source>reunion.nombre</source>
+                <target>Nombre</target>
+            </trans-unit>
+            <trans-unit id="507">
+                <source>reunion.fecha_creacion</source>
+                <target>Fecha de creación</target>
+            </trans-unit>
+            <trans-unit id="508">
+                <source>reunion.caduca</source>
+                <target>Expira</target>
+            </trans-unit>
+            <trans-unit id="509">
+                <source>reunion.estado</source>
+                <target>Estado</target>
+            </trans-unit>
+            <trans-unit id="510">
+                <source>reunion.mis_invitaciones</source>
+                <target>Mis invitaciones pendientes</target>
+            </trans-unit>
+            <trans-unit id="511">
+                <source>reunion.sin_invitaciones</source>
+                <target>No tienes invitaciones pendientes</target>
             </trans-unit>
            
             

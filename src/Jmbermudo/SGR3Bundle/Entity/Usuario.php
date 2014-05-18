@@ -3,6 +3,7 @@
 namespace Jmbermudo\SGR3Bundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 use FOS\UserBundle\Model\User as BaseUser;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -213,5 +214,30 @@ class Usuario extends BaseUser
     public function getReuniones()
     {
         return $this->reuniones;
+    }
+    
+    /**
+     * //@TODO: Esta función devuelve un array con las reuniones que el usuario tiene
+     * pendientes, es decir, cuya fecha seleccionada de reunión no ha pasado; o
+     * aquellas que todavía están en periodo de votación
+     * @return array
+     */
+    public function getReunionesPendientes()
+    {
+        $reuniones = $this->getReuniones();
+
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("anulada", "0"))
+            ->andWhere(Criteria::expr()->eq("fechaCreacion", "0"))
+        ;
+
+        $reunionesPendientes = $reuniones->matching($criteria);
+        
+        return $reunionesPendientes;
+    }
+    
+    public function __toString()
+    {
+        return $this->getNombre() . ' ' . $this->getApellidos();
     }
 }

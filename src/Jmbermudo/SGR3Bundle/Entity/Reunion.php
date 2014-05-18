@@ -258,4 +258,14 @@ class Reunion
     {
         return $this->anulada;
     }
+    
+    /**
+     * @TODO: generar contenido
+     * Esta función devolverá la pre-reserva aceptada (en caso de que la hubiera)
+     * o NULL en caso contrario
+     */
+    public function getReserva()
+    {
+        return NULL;
+    }
 }
