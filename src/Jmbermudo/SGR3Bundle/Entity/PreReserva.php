@@ -70,6 +70,14 @@ class PreReserva
      * @ORM\Column(name="anulada", type="boolean")
      */
     private $anulada;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="Reunion", inversedBy="prereservas")
+     * @ORM\JoinColumn(referencedColumnName="id")
+     */
+    private $reunion;
 
 
     /**
@@ -241,5 +249,29 @@ class PreReserva
     public function getFecha()
     {
         return $this->fecha;
+    }
+    
+
+    /**
+     * Set reunion
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Reunion $reunion
+     * @return PreReserva
+     */
+    public function setReunion(\Jmbermudo\SGR3Bundle\Entity\Reunion $reunion = null)
+    {
+        $this->reunion = $reunion;
+
+        return $this;
+    }
+
+    /**
+     * Get reunion
+     *
+     * @return \Jmbermudo\SGR3Bundle\Entity\Reunion 
+     */
+    public function getReunion()
+    {
+        return $this->reunion;
     }
 }

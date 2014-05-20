@@ -71,7 +71,7 @@ class Reunion
     private $invitados;
     
     /**
-     * @ORM\ManyToMany(targetEntity="PreReserva", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PreReserva", mappedBy="reunion", cascade={"all"})
      **/
     private $prereservas;
 

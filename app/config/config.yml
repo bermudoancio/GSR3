@@ -88,6 +88,9 @@ doctrine:
 #                metadata_cache_driver: apc
 #                query_cache_driver: apc
 #                result_cache_driver: apc
+                dql:
+                    datetime_functions:
+                        date: Jmbermudo\SGR3Bundle\DQL\DateFunction
             usuarios:
                 connection:       usuarios
                 mappings:

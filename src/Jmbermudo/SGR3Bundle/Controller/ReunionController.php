@@ -4,6 +4,8 @@ namespace Jmbermudo\SGR3Bundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
+use \DateTime;
 use Jmbermudo\SGR3Bundle\Entity\Reunion;
 use Jmbermudo\SGR3Bundle\Entity\PreReserva;
 use Jmbermudo\SGR3Bundle\Form\ReunionType;
@@ -57,8 +59,9 @@ class ReunionController extends Controller
         $num_reuniones = $em->getRepository('JmbermudoSGR3Bundle:Usuario')->getReunionesActivas($this->getUser());
 
         if($num_reuniones >= $this->container->getParameter('max_reuniones')){
-           $form->addError($this->get('translator')->trans('reunion.max_reuniones_superado'));
+           $form->addError(new FormError($this->get('translator')->trans('reunion.max_reuniones_superado')));
         }
+        
         /*
          * Ahora, de la misma forma procedemos a comprobar el número máximo
          * de pre-reservas efectuadas.
@@ -66,8 +69,20 @@ class ReunionController extends Controller
         
         $preReservas = $entity->getPrereservas();
         
+        /*
+         * Vamos a comprobar si las pre-reservas son válidas
+         */
+        $mensajes_error = $this->checkPreReservas($request, $preReservas);
+        
+        if(count($mensajes_error) > 0){
+            foreach ($mensajes_error as $mensaje) {
+                //El mensaje ya está traducido aquí
+                $form->addError(new FormError($mensaje));
+            }
+        }
+        
         if($preReservas->count() /* @TODO + $this->getUser()->getPrereservas().count() */ > $this->container->getParameter('max_pre_reservas_total')){
-            $form->addError($this->get('translator')->trans('reunion.max_prereservas_superado'));
+            $form->addError(new FormError($this->get('translator')->trans('reunion.max_prereservas_superado')));
         }
 
         if ($form->isValid()) {
@@ -77,6 +92,7 @@ class ReunionController extends Controller
                 $preReserva->setAnulada(false);
                 $preReserva->setResponsableResponde(false);
                 $preReserva->setResponsableAcepta(false);
+                $preReserva->setReunion($entity);
             }
             
             $em->persist($entity);
@@ -118,7 +134,7 @@ class ReunionController extends Controller
         //Y a todos los participantes
         foreach ($entity->getInvitados() as $invitado) {
             $message = \Swift_Message::newInstance()
-                ->setSubject($this->get('translator')->trans('reunion.creacion_ok'))
+                ->setSubject($this->get('translator')->trans('reunion.invitado'))
                 ->setFrom($this->container->getParameter('mailer_user'))
                 ->setTo($invitado->getEmail())
                 ->setBody(
@@ -314,5 +330,104 @@ class ReunionController extends Controller
             ->add('submit', 'submit', array('label' => $this->get('translator')->trans('global.eliminar')))
             ->getForm()
         ;
+    }
+    
+    /**
+     * Esta función comprobará si las prereservas de una reunión son válidas.
+     * Para ello, comprobaremos una a una si existe alguna imposibilidad de realizar
+     * las prereservas con otras ya existentes.
+     * @param array $preReservas
+     * @return array $mensajes Los mensajes de error encontrados o un array vacío si todo ha salido bien
+     */
+    private function checkPreReservas(Request $request, \Doctrine\Common\Collections\ArrayCollection $preReservas)
+    {
+        $mensajes = array();
+        
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('JmbermudoSGR3Bundle:PreReserva');
+        
+        foreach ($preReservas as $preReserva) {
+           /*
+            * Ahora vamos a hacer dos comprobaciones básicas:
+            *  1: La fecha es posterior o igual al día de hoy
+            *  2: La hora de fin es posterior a la hora de inicio
+            */
+            $fechaInicioConHoraInicio = $preReserva->getFecha();
+            //Lo que hacemos es ponerle la hora inicio a la fecha para comparar
+            $fechaInicioConHoraInicio->setTime($preReserva->getHoraInicio()->format('H'), $preReserva->getHoraInicio()->format('i'));
+            
+            if ($fechaInicioConHoraInicio <= new DateTime("now")){
+                $mensajes[] = $this->get('translator')->trans('reunion.errorFechaAnterior');
+            }
+            
+            if ($preReserva->getHoraInicio() >= $preReserva->getHoraFin()){
+                $mensajes[] = $this->get('translator')->trans('reunion.errorHoraIncongruente');
+            }
+            
+            
+            //Obtenemos la lista de reservas del recurso para ese día
+            $reservas = $repo->getPrereservasRecurso($preReserva->getRecurso(), $preReserva->getFecha());
+            /*
+             * Entiendase la reserva como las que ya están efectuadas (aceptadas o pendientes)
+             * y las prereservas las que se están intentando efectuar ahora
+             */
+            foreach($reservas as $reserva) {
+                if($this->solapa($preReserva, $reserva)){
+                    //Formateemos las fechas antes de mostrarlas
+                    $formatterFecha = \IntlDateFormatter::create(
+                        $request->getLocale(),
+                        \IntlDateFormatter::MEDIUM,
+                        \IntlDateFormatter::NONE,
+                        $preReserva->getFecha()->getTimezone()->getName(),
+                        \IntlDateFormatter::GREGORIAN,
+                        null
+                    );
+                    
+                    $formatterHora = \IntlDateFormatter::create(
+                        $request->getLocale(),
+                        \IntlDateFormatter::NONE,
+                        \IntlDateFormatter::MEDIUM,
+                        $preReserva->getFecha()->getTimezone()->getName(),
+                        \IntlDateFormatter::GREGORIAN,
+                        null
+                    );
+                    
+                    
+                    $mensajes[] = $this->get('translator')->trans('reunion.solapa', array(
+                        '%recurso%' => $preReserva->getRecurso()->getNombre(),
+                        '%fecha%' => $formatterFecha->format($preReserva->getFecha()->getTimestamp()),
+                        '%hora_inicio%' => $formatterHora->format($reserva->getHoraInicio()->getTimestamp()),
+                        '%hora_fin%' => $formatterHora->format($reserva->getHoraFin()->getTimestamp())
+                    ));
+                }
+            }
+        }
+        
+        return $mensajes;
+    }
+    
+    private function solapa(PreReserva $preReserva, PreReserva $reserva){
+        $solapa = false;
+        /*
+         * Al obtener un campo Time de la BD el sistema le incorpora la fecha
+         * actual. Para ello, lo que haremos será "falsear" la fecha para todos
+         * Para "
+         */
+        $Hi = $reserva->getHoraInicio()->setDate(2000, 01, 01);
+        $Hf = $reserva->getHoraFin()->setDate(2000, 01, 01);
+        $hi = $preReserva->getHoraInicio()->setDate(2000, 01, 01);
+        $hf = $preReserva->getHoraFin()->setDate(2000, 01, 01);
+        
+        $c1 = $hi <= $Hi;
+        $c2 = $hf > $Hi;
+        $c3 = $hi > $Hi;
+        $c4 = $hi < $Hf;
+        
+        if($c1 && $c2 || $c3 && $c4) {
+            //Si se da alguno de estos casos, las reservas se solapan
+            $solapa = true;
+        }
+        
+        return $solapa;
     }
 }

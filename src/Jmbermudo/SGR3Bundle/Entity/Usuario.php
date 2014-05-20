@@ -44,7 +44,7 @@ class Usuario extends BaseUser
     private $responsable_de_recursos;
     
     /**
-     * @ORM\OneToMany(targetEntity="Reunion", mappedBy="creador", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Reunion", mappedBy="creador", cascade={"all"})
      */
     private $creador_de_reuniones;
     

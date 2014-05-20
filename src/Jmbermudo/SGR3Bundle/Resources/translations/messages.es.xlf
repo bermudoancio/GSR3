@@ -142,7 +142,24 @@
                 <source>reunion.addPreReserva</source>
                 <target>Añadir una pre-reserva</target>
             </trans-unit>
-           
+            <trans-unit id="514">
+                <source>reunion.solapa</source>
+                <target>No se puede realizar la reserva porque una de las prereservas solapa una reserva anterior. 
+                El recurso "%recurso%" está reservado el día %fecha% desde las %hora_inicio% hasta las %hora_fin%
+                Debe cambiar esto para poder continuar</target>
+            </trans-unit>
+            <trans-unit id="515">
+                <source>reunion.invitado</source>
+                <target>Has sido invitado a una reunión</target>
+            </trans-unit>
+            <trans-unit id="516">
+                <source>reunion.errorFechaAnterior</source>
+                <target>No puedes seleccionar una fecha anterior a hoy</target>
+            </trans-unit>
+            <trans-unit id="517">
+                <source>reunion.errorHoraIncongruente</source>
+                <target>La hora de fin debe ser mayor que la hora de inicio</target>
+            </trans-unit>
             
         </body>
     </file>

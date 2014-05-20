@@ -51,9 +51,16 @@ class Recurso
     private $responsable;
     
     /**
-     * @ORM\OneToMany(targetEntity="PreReserva", mappedBy="recurso", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="PreReserva", mappedBy="recurso", cascade={"all"})
      */
     private $prereservas;
+    
+    /**
+     * @var boolean
+     * 
+     * @ORM\Column(name="activo", type="boolean")
+     */
+    private $activo;
 
 
     /**
@@ -201,5 +208,28 @@ class Recurso
     public function __toString()
     {
         return $this->getNombre();
+    }
+
+    /**
+     * Set activo
+     *
+     * @param boolean $activo
+     * @return Recurso
+     */
+    public function setActivo($activo)
+    {
+        $this->activo = $activo;
+
+        return $this;
+    }
+
+    /**
+     * Get activo
+     *
+     * @return boolean 
+     */
+    public function getActivo()
+    {
+        return $this->activo;
     }
 }

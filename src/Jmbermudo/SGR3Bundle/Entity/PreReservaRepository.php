@@ -12,4 +12,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class PreReservaRepository extends EntityRepository
 {
+    public function getPrereservasRecurso(Recurso $recurso, \DateTime $fecha)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+                'SELECT pr FROM JmbermudoSGR3Bundle:Prereserva pr '
+                . 'JOIN pr.recurso r '
+                . 'WHERE r.id = :recurso '
+                . 'AND DATE(pr.fecha) = DATE(:fecha) '
+                . 'AND pr.anulada = 0 '
+            );
+        
+        $query->setParameter('recurso', $recurso->getId());
+        $query->setParameter('fecha', $fecha);
+            
+        return $query->getResult();
+    }
 }
