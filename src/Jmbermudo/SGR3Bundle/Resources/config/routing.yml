@@ -9,6 +9,10 @@ JmbermudoSGR3Bundle_recurso:
 JmbermudoSGR3Bundle_reunion:
     resource: "@JmbermudoSGR3Bundle/Resources/config/routing/reunion.yml"
     prefix:   /reuniones
+    
+JmbermudoSGR3Bundle_prereservas:
+    resource: "@JmbermudoSGR3Bundle/Resources/config/routing/prereserva.yml"
+    prefix:   /prereservas
 
 jmbermudo_sgr3_admin_listar_recursos:
     path:   /admin/listarRecursos

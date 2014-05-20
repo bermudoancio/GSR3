@@ -6,9 +6,9 @@ Jmbermudo\SGR3Bundle\Entity\Reunion:
             - Count:
                 min: 1
                 minMessage: "reunion.invitados.min"
-#        pre-reservas:
-#            - Count:
-#                min: 1
-#                max: %max_pre_reservas_reunion%
-#                minMessage: "reunion.prereservas.min"
-#                maxMessage: "reunion.prereservas.max"
+        prereservas:
+            - Count:
+                min: 1
+                max: 4
+                minMessage: "reunion.prereservas.min"
+                maxMessage: "reunion.prereservas.max"

@@ -49,6 +49,11 @@ class Recurso
      * @ORM\JoinColumn(referencedColumnName="id")
      */
     private $responsable;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="PreReserva", mappedBy="recurso", cascade={"persist"})
+     */
+    private $prereservas;
 
 
     /**
@@ -151,5 +156,50 @@ class Recurso
     public function getResponsable()
     {
         return $this->responsable;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->prereservas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add prereservas
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\PreReserva $prereservas
+     * @return Recurso
+     */
+    public function addPrereserva(\Jmbermudo\SGR3Bundle\Entity\PreReserva $prereservas)
+    {
+        $this->prereservas[] = $prereservas;
+
+        return $this;
+    }
+
+    /**
+     * Remove prereservas
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\PreReserva $prereservas
+     */
+    public function removePrereserva(\Jmbermudo\SGR3Bundle\Entity\PreReserva $prereservas)
+    {
+        $this->prereservas->removeElement($prereservas);
+    }
+
+    /**
+     * Get prereservas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPrereservas()
+    {
+        return $this->prereservas;
+    }
+    
+    public function __toString()
+    {
+        return $this->getNombre();
     }
 }

@@ -5,6 +5,7 @@ namespace Jmbermudo\SGR3Bundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Jmbermudo\SGR3Bundle\Entity\Reunion;
+use Jmbermudo\SGR3Bundle\Entity\PreReserva;
 use Jmbermudo\SGR3Bundle\Form\ReunionType;
 
 /**
@@ -59,11 +60,24 @@ class ReunionController extends Controller
            $form->addError($this->get('translator')->trans('reunion.max_reuniones_superado'));
         }
         /*
-         * @TODO: Ahora, de la misma forma procedemos a comprobar el número máximo
+         * Ahora, de la misma forma procedemos a comprobar el número máximo
          * de pre-reservas efectuadas.
          */
+        
+        $preReservas = $entity->getPrereservas();
+        
+        if($preReservas->count() /* @TODO + $this->getUser()->getPrereservas().count() */ > $this->container->getParameter('max_pre_reservas_total')){
+            $form->addError($this->get('translator')->trans('reunion.max_prereservas_superado'));
+        }
 
         if ($form->isValid()) {
+            
+            //Tenemos que darle los valores básicos a la pre-reserva
+            foreach ($preReservas as $preReserva) {
+                $preReserva->setAnulada(false);
+                $preReserva->setResponsableResponde(false);
+                $preReserva->setResponsableAcepta(false);
+            }
             
             $em->persist($entity);
             $em->flush();
@@ -159,6 +173,7 @@ class ReunionController extends Controller
         
         //Si no ha superado el límite, puede crearla
         $entity = new Reunion();
+       
         $form   = $this->createCreateForm($entity);
 
         return $this->render('JmbermudoSGR3Bundle:Reunion:new.html.twig', array(

@@ -68,3 +68,49 @@
     </div>
 {% endspaceless %}
 {% endblock button_row %}
+    
+{% block time_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {# Cambiamos la llamada a block('form_widget_simple') para personalizar el campo #}
+        <div class='input-group time datetimepicker'>
+            <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+        </div>
+    {% else %}
+        {% set vars = widget == 'text' ? { 'attr': { 'size': 1 }} : {} %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_widget(form.hour, vars) }}{% if with_minutes %}:{{ form_widget(form.minute, vars) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second, vars) }}{% endif %}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock time_widget %}
+    
+{% block date_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {# Cambiamos la llamada a block('form_widget_simple') para personalizar el campo #}
+        <div class='input-group date datetimepicker'>
+            <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="form-control" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+    {% else %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw }}
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock date_widget %}
+    
+{% block collection_widget %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    {{ block('form_widget') }}
+{% endspaceless %}
+{% endblock collection_widget %}

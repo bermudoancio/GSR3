@@ -69,6 +69,11 @@ class Reunion
      * @ORM\JoinTable(name="invitados_reunion")
      **/
     private $invitados;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="PreReserva", cascade={"persist"})
+     **/
+    private $prereservas;
 
 
     /**
@@ -178,6 +183,7 @@ class Reunion
     public function __construct()
     {
         $this->invitados = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->prereservas = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -267,5 +273,38 @@ class Reunion
     public function getReserva()
     {
         return NULL;
+    }
+
+    /**
+     * Add prereservas
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\PreReserva $prereservas
+     * @return Reunion
+     */
+    public function addPrereserva(\Jmbermudo\SGR3Bundle\Entity\PreReserva $prereservas)
+    {
+        $this->prereservas[] = $prereservas;
+
+        return $this;
+    }
+
+    /**
+     * Remove prereservas
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\PreReserva $prereservas
+     */
+    public function removePrereserva(\Jmbermudo\SGR3Bundle\Entity\PreReserva $prereservas)
+    {
+        $this->prereservas->removeElement($prereservas);
+    }
+
+    /**
+     * Get prereservas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPrereservas()
+    {
+        return $this->prereservas;
     }
 }

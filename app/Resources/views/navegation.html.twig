@@ -192,7 +192,7 @@
             <ul class="nav" id="side-menu">
                 
                 <li>
-                    <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> {% trans %}global.homepage{% endtrans %}</a>
+                    <a href="{{ path('jmbermudo_sgr3_homepage') }}"><i class="fa fa-dashboard fa-fw"></i> {% trans %}global.homepage{% endtrans %}</a>
                 </li>
                 
                 {% if is_granted("ROLE_ADMIN") %}

@@ -19,6 +19,16 @@ class ReunionType extends AbstractType
             ->add('nombrePrivado')
             ->add('descripcion')
             ->add('invitados')
+                
+            //El campo podrá tener una "colección" de prereservas
+            ->add('prereservas', 'collection', array(
+                'type' => new PreReservaType(),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype_name' => '__op_name__',
+                )
+            );
         ;
     }
     
