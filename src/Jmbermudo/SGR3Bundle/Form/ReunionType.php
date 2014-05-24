@@ -27,6 +27,7 @@ class ReunionType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype_name' => '__op_name__',
+                'error_bubbling' => false, //dejamos los errores aquí para tenerlos presentes
                 )
             );
         ;

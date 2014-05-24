@@ -14,8 +14,10 @@ jQuery(document).ready(function() {
     });
     
     $collectionHolder.find('li').each(function() {
+        console.debug($(this));
+        
         //Activamos el datepicker para este elemento
-        $(this).datetimepicker();
+        setDateTime($(this));
         
         addFormDeleteLink($(this));
     });
@@ -39,7 +41,12 @@ function addForm($collectionHolder) {
     
     $collectionHolder.append($newFormLi);
     
-    $($newFormLi).find(".datetimepicker").each(function(){
+    setDateTime($newFormLi);
+}
+
+function setDateTime($li)
+{
+    $($li).find(".datetimepicker").each(function(){
         if($(this).hasClass('date')){
             today = new Date();
             today.setDate(today.getDate()-1);
@@ -76,7 +83,7 @@ function addForm($collectionHolder) {
 }
 
 function addFormDeleteLink($formLi) {
-var $removeFormA = $('<a href="#" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i></a>');
+    var $removeFormA = $('<a href="#" class="btn btn-warning"><i class="glyphicon glyphicon-trash"></i></a>');
     $formLi.append($removeFormA);
     $removeFormA.on('click', function(e) {
         // prevent the link from creating a "#" on the URL

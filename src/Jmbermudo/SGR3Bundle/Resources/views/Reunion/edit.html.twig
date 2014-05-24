@@ -2,6 +2,31 @@
 
 {% block title %}{% trans %}global.name{% endtrans %} - {% trans %}reunion.modificarReunion{% endtrans %}{% endblock title %}
 
+{% block stylesheets %}
+    {% stylesheets 'bundles/jmbermudosgr3/css/bootstrap-datetimepicker/*' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+        
+{% block javascripts_block %}
+        {{ parent() }}
+        <script type="text/javascript">
+            var locale = "{{ app.request.locale }}";
+        </script>
+{% endblock %}
+
+{% block javascripts_bottom %}
+    {{ parent() }}
+
+    {% javascripts 'bundles/jmbermudosgr3/js/general/moment.min.js'
+                   'bundles/jmbermudosgr3/js/bootstrap/datetimepicker/bootstrap-datetimepicker.min.js'
+                   'bundles/jmbermudosgr3/js/_pages/nuevaReunion.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
 {% block content %}
     {{ parent() }}
 
@@ -14,7 +39,30 @@
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="row">
-                        {{ form(edit_form) }}
+                        {{ form_start(edit_form) }}
+                            {{ form_errors(edit_form) }}
+                        
+                            {{ form_row(edit_form.nombrePublico) }}
+                            {{ form_row(edit_form.nombrePrivado) }}
+                            {{ form_row(edit_form.descripcion) }}
+                            {{ form_row(edit_form.invitados) }}
+                        
+                        <div class="col-lg-12 col_prereservas">
+                            {{ form_label(edit_form.prereservas) }}
+                            <br/>
+                            <ul class="prereservas" data-prototype="{{ form_widget(edit_form.prereservas.vars.prototype)|e }}">
+                                {% for prereserva in edit_form.prereservas %}
+                                    <li class="col-lg-6">
+                                    {{ form_errors(prereserva) }}
+                                    {{ form_widget(prereserva) }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <a href="#" class="btn btn-info add_link"><i class="glyphicon glyphicon-plus-sign"></i> {% trans %}reunion.addPreReserva{% endtrans %}</a>
+                        </div>
+                        <div class="col-lg-12"><hr/></div>
+                        
+                        {{ form_end(edit_form) }}
                     </div>
                     
                 </div>

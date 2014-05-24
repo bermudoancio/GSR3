@@ -205,9 +205,17 @@ class Recurso
         return $this->prereservas;
     }
     
+    /**
+     * Además del nombre, si tiene un responsable, le añadiremos al final un asterisco
+     * @return type
+     */
     public function __toString()
     {
-        return $this->getNombre();
+        $nombre = $this->getNombre();
+        if($this->getResponsable() !== null){
+            $nombre .= '*';
+        }
+        return $nombre;
     }
 
     /**

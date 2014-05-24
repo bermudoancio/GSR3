@@ -48,8 +48,8 @@
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}<div id="page-wrapper">{% endif %}
             {% for type, messages in app.session.flashbag.all() %}
                 {% for message in messages %}
-                    <div class="flash-{{ type }}">
-                        {{ message }}
+                    <div class="bs-callout bs-callout-{{ type }}">
+                        <h4>{{ message }}</h4>
                     </div>
                 {% endfor %}
             {% endfor %}

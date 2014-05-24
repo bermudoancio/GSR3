@@ -75,6 +75,16 @@ class ReunionController extends Controller
         $mensajes_error = $this->checkPreReservas($request, $preReservas);
         
         if(count($mensajes_error) > 0){
+//            foreach ($preReservas as $preReserva) {
+//                $obj_serializado = serialize($preReserva);
+//                if(array_key_exists($obj_serializado, $mensajes_error)){
+//                    foreach ($mensajes_error[$obj_serializado] as $error) {
+//                        $form->get('prereservas')->addError($error);
+//                    }
+//                }
+//            }
+            
+            
             foreach ($mensajes_error as $mensaje) {
                 //El mensaje ya está traducido aquí
                 $form->addError(new FormError($mensaje));
@@ -90,9 +100,16 @@ class ReunionController extends Controller
             //Tenemos que darle los valores básicos a la pre-reserva
             foreach ($preReservas as $preReserva) {
                 $preReserva->setAnulada(false);
+                $preReserva->setReunion($entity);
+                
+                //comprobamos si el recurso tiene responsable, y le avisamos
+                if($preReserva->getRecurso()->getResponsable() !== null){
+                    //hay que avisar al responsable
+                    $this->avisaResponsable($preReserva, $request);
+                }
+                
                 $preReserva->setResponsableResponde(false);
                 $preReserva->setResponsableAcepta(false);
-                $preReserva->setReunion($entity);
             }
             
             $em->persist($entity);
@@ -116,41 +133,6 @@ class ReunionController extends Controller
         ));
     }
     
-    private function avisaCreacionOk(Reunion $entity, Request $request)
-    {
-        //Avisamos por email al creador
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->get('translator')->trans('reunion.creacion_ok'))
-            ->setFrom($this->container->getParameter('mailer_user'))
-            ->setTo($entity->getCreador()->getEmail())
-            ->setBody(
-                $this->renderView(
-                    'JmbermudoSGR3Bundle:Reunion:email_admin_' . $request->getLocale() . '.txt.twig',
-                    array('nombre' => $entity->getNombrePublico())
-                )
-            );            
-        $this->get('mailer')->send($message);
-
-        //Y a todos los participantes
-        foreach ($entity->getInvitados() as $invitado) {
-            $message = \Swift_Message::newInstance()
-                ->setSubject($this->get('translator')->trans('reunion.invitado'))
-                ->setFrom($this->container->getParameter('mailer_user'))
-                ->setTo($invitado->getEmail())
-                ->setBody(
-                    $this->renderView(
-                        'JmbermudoSGR3Bundle:Reunion:email_invitado_' . $request->getLocale() . '.txt.twig',
-                        array('nombre' => $entity->getNombrePublico(),
-                            'invitado' => $invitado->getNombre(),
-                            'creador' => $entity->getCreador(),
-                            'enlace' => ''
-                                )
-                    )
-                );            
-            $this->get('mailer')->send($message);
-        }
-    }
-
     /**
     * Creates a form to create a Reunion entity.
     *
@@ -232,6 +214,15 @@ class ReunionController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Reunion entity.');
         }
+        
+        /*
+         * Vamos a comprobar que el usuario tiene acceso para editar esta reunión.
+         * Sólo tendrán acceso el creador y los administradores
+         */
+        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')
+                && $this->getUser() !== $entity->getCreador()) {
+            throw new AccessDeniedException();
+        }
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
@@ -274,6 +265,15 @@ class ReunionController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Reunion entity.');
         }
+        
+        /*
+         * Vamos a comprobar que el usuario tiene acceso para editar esta reunión.
+         * Sólo tendrán acceso el creador y los administradores
+         */
+        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')
+                && $this->getUser() !== $entity->getCreador()) {
+            throw new AccessDeniedException();
+        }
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
@@ -281,6 +281,14 @@ class ReunionController extends Controller
 
         if ($editForm->isValid()) {
             $em->flush();
+            
+            //Por último, avisamos de la modificación
+            $this->avisaModificacion();
+            
+            // add flash messages
+            $request->getSession()->getFlashBag()->add(
+                    'success', $this->get('translator')->trans('reunion.modificacion_ok')
+            );
 
             return $this->redirect($this->generateUrl('reunion_edit', array('id' => $id)));
         }
@@ -297,22 +305,41 @@ class ReunionController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->find($id);
+        
+        /*
+         * Vamos a comprobar que el usuario tiene acceso para editar esta reunión.
+         * Sólo tendrán acceso el creador y los administradores
+         */
+        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')
+                && $this->getUser() !== $entity->getCreador()) {
+            throw new AccessDeniedException();
+        }
+        
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->find($id);
+            
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Reunion entity.');
             }
-
-            $em->remove($entity);
+            //No la borramos, sino que la marcamos como anulada
+            $entity->setAnulada(true);
             $em->flush();
+            
+            //Por último, avisamos de la cancelación
+            $this->avisaCancelacion($entity, $request);
+            
+            // add flash messages
+            $request->getSession()->getFlashBag()->add(
+                    'success', $this->get('translator')->trans('reunion.cancelacion_ok')
+            );
         }
 
-        return $this->redirect($this->generateUrl('reunion_index'));
+        return $this->redirect($this->generateUrl('jmbermudo_sgr3_homepage'));
     }
 
     /**
@@ -406,12 +433,18 @@ class ReunionController extends Controller
         return $mensajes;
     }
     
+    /**
+     * Esta función calcula si dos pre-reservas se solapan entre ellas
+     * @param \Jmbermudo\SGR3Bundle\Entity\PreReserva $preReserva
+     * @param \Jmbermudo\SGR3Bundle\Entity\PreReserva $reserva
+     * @return boolean
+     */
     private function solapa(PreReserva $preReserva, PreReserva $reserva){
         $solapa = false;
         /*
          * Al obtener un campo Time de la BD el sistema le incorpora la fecha
          * actual. Para ello, lo que haremos será "falsear" la fecha para todos
-         * Para "
+         * Para igualar el día, mes y año
          */
         $Hi = $reserva->getHoraInicio()->setDate(2000, 01, 01);
         $Hf = $reserva->getHoraFin()->setDate(2000, 01, 01);
@@ -429,5 +462,122 @@ class ReunionController extends Controller
         }
         
         return $solapa;
+    }
+    
+    private function avisaCreacionOk(Reunion $entity, Request $request)
+    {
+        //Avisamos por email al creador
+        $this->sendMail(
+                $this->get('translator')->trans('reunion.creacion_ok'),
+                $entity->getCreador()->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_admin_' . $request->getLocale() . '.txt.twig', 
+                array('nombre' => $entity->getNombrePublico())
+                );
+
+        //Y a todos los participantes
+        foreach ($entity->getInvitados() as $invitado) {
+            $this->sendMail(
+                $this->get('translator')->trans('reunion.invitado'),
+                $invitado->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_invitado_' . $request->getLocale() . '.txt.twig', 
+                array(
+                    'nombre' => $entity->getNombrePublico(),
+                    'invitado' => $invitado->getNombre(),
+                    'creador' => $entity->getCreador(),
+                    'enlace' => ''
+                )
+            );
+        }
+    }
+    
+    private function avisaCancelacion(Reunion $entity, Request $request)
+    {
+        //Avisamos por email al creador
+        $this->sendMail(
+                $this->get('translator')->trans('reunion.cancelacion_ok'),
+                $entity->getCreador()->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_cancelacion_creador_' . $request->getLocale() . '.txt.twig', 
+                array('nombre' => $entity->getNombrePublico())
+                );
+
+        //Y a todos los participantes
+        foreach ($entity->getInvitados() as $invitado) {
+            $this->sendMail(
+                $this->get('translator')->trans('reunion.cancelacion_invitado',
+                        array(
+                            '%reunion%' => $entity->getNombrePublico()
+                        )),
+                $invitado->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_cancelacion_invitado_' . $request->getLocale() . '.txt.twig', 
+                array(
+                    'nombre' => $entity->getNombrePublico(),
+                    'invitado' => $invitado->getNombre()
+                )
+            );
+        }
+    }
+    
+    private function avisaModificacion(Reunion $entity, Request $request)
+    {
+        //Avisamos por email al creador
+        $this->sendMail(
+                $this->get('translator')->trans('reunion.modificacion_ok'),
+                $entity->getCreador()->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_modificacion_creador_' . $request->getLocale() . '.txt.twig', 
+                array('nombre' => $entity->getNombrePublico())
+                );
+
+        //Y a todos los participantes
+        foreach ($entity->getInvitados() as $invitado) {
+            $this->sendMail(
+                $this->get('translator')->trans('reunion.modificacion_invitado',
+                        array(
+                            '%reunion%' => $entity->getNombrePublico()
+                        )),
+                $invitado->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_modificacion_invitado_' . $request->getLocale() . '.txt.twig', 
+                array(
+                    'nombre' => $entity->getNombrePublico(),
+                    'invitado' => $invitado->getNombre()
+                )
+            );
+        }
+    }
+    
+    private function avisaResponsable(PreReserva $entity, Request $request)
+    {
+        //Avisamos por email al creador
+        $this->sendMail(
+                $this->get('translator')->trans('reunion.aviso_responsable'),
+                $entity->getRecurso()->getResponsable()->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_aviso_responsable_' . $request->getLocale() . '.txt.twig', 
+                array(
+                    'responsable' => $entity->getRecurso()->getResponsable()->getNombre(),
+                    'preReserva' => $entity,
+                    'enlace' => ''
+                )
+            );
+    }
+    
+    /**
+     * Método que realiza el envío de emails. Si se cambia el mecanismo, cambiar sólo aquí.
+     * @param string $asunto
+     * @param string $para
+     * @param string $plantilla
+     * @param array $parametros
+     */
+    private function sendMail($asunto, $para, $plantilla, $parametros)
+    {
+        $message = \Swift_Message::newInstance()
+                ->setSubject($this->get('translator')->trans('global.name') . ': ' . $asunto)
+                ->setFrom($this->container->getParameter('mailer_user'))
+                ->setTo($para)
+                ->setBody(
+                    $this->renderView(
+                        $plantilla,
+                        $parametros
+                    )
+                );            
+            $this->get('mailer')->send($message);
     }
 }

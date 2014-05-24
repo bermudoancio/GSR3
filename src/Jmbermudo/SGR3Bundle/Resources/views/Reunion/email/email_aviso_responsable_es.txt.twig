@@ -1,0 +1,9 @@
+Hola {{ responsable }},
+
+{{ preReserva.reunion.creador }} ha propuesto una reunión en el recurso {{ preReserva.recurso }}, del cual usted es reponsable, para el día {{ preReserva.fecha | localizeddate('medium', 'none', app.request.locale ) }} desde las {{ preReserva.horaInicio | localizeddate('none', 'medium', app.request.locale ) }} hasta las {{ preReserva.horaFin | localizeddate('none', 'medium', app.request.locale ) }}.
+
+Por favor, acepte o decline la solicitud para que el proceso pueda continuar correctamente.
+
+Para ello, haga click en el siguiente enlace {{ enlace }}
+
+¡Un cordial saludo!

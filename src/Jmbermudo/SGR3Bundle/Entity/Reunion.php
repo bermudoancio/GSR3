@@ -243,7 +243,7 @@ class Reunion
     }
 
     /**
-     * Set anulada
+     * Anula la reunión, y todas las pre-reservas efectuadas
      *
      * @param boolean $anulada
      * @return Reunion
@@ -251,6 +251,14 @@ class Reunion
     public function setAnulada($anulada)
     {
         $this->anulada = $anulada;
+        
+        if($this->anulada){
+            $prereservas = $this->getPrereservas();
+            
+            foreach ($prereservas as $prereserva){
+                $prereserva->setAnulada($this->anulada);
+            }
+        }
 
         return $this;
     }

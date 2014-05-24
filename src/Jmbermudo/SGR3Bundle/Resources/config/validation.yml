@@ -12,3 +12,14 @@ Jmbermudo\SGR3Bundle\Entity\Reunion:
                 max: 4
                 minMessage: "reunion.prereservas.min"
                 maxMessage: "reunion.prereservas.max"
+                
+Jmbermudo\SGR3Bundle\Entity\PreReserva:
+    properties:
+        fecha:
+            - NotBlank: { message: "reunion.preReserva.fecha.not_blank" }
+        horaInicio:
+            - NotBlank: { message: "reunion.preReserva.horaInicio.not_blank" }
+        horaFin:
+            - NotBlank: { message: "reunion.preReserva.horaFin.not_blank" }
+        recurso:
+            - NotBlank: { message: "reunion.preReserva.recurso.not_blank" }

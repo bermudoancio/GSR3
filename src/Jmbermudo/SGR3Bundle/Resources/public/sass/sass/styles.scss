@@ -27,6 +27,40 @@ $icon-font-path: "/sgr3/SGR3/web/css/fonts/bootstrap/";
     margin: 1em 0;
 }
 
-.col_prereservas {
-    
+.bs-callout {
+    border-left: 3px solid #EEEEEE;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.bs-callout h4 {
+    margin-bottom: 5px;
+    margin-top: 0;
+    font-size: 1em;
+}
+
+.bs-callout-error {
+    background-color: #FDF7F7;
+    border-color: #D9534F;
+}
+
+.bs-callout-error h4 {
+    color: #D9534F;
+}
+
+.bs-callout-notice {
+    background-color: #F4F8FA;
+    border-color: #5BC0DE;
+}
+
+.bs-callout-notice h4 {
+    color: #5BC0DE;
+}
+
+.bs-callout-warning {
+    background-color: #FCF8F2;
+    border-color: #F0AD4E;
+}
+.bs-callout-warning h4 {
+    color: #F0AD4E;
 }

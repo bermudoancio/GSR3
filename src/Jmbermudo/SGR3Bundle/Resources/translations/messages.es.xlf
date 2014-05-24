@@ -160,6 +160,22 @@
                 <source>reunion.errorHoraIncongruente</source>
                 <target>La hora de fin debe ser mayor que la hora de inicio</target>
             </trans-unit>
+            <trans-unit id="518">
+                <source>reunion.cancelacion_ok</source>
+                <target>La reunión se ha cancelado correctamente</target>
+            </trans-unit>
+            <trans-unit id="519">
+                <source>reunion.cancelacion_invitado</source>
+                <target>La reunión %reunion% ha sido cancelada</target>
+            </trans-unit>
+            <trans-unit id="520">
+                <source>reunion.modificacion_ok</source>
+                <target>La reunión se ha modificado correctamente</target>
+            </trans-unit>
+            <trans-unit id="521">
+                <source>reunion.aviso_responsable</source>
+                <target>Se le solicita permiso para reservar un recurso</target>
+            </trans-unit>
             
         </body>
     </file>

@@ -94,6 +94,7 @@ doctrine:
             usuarios:
                 connection:       usuarios
                 mappings:
+                    JmbermudoSGR3Bundle: ~
                     FOSUserBundle: ~
         
         

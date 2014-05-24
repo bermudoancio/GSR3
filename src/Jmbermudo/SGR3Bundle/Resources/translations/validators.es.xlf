@@ -18,6 +18,24 @@
                 <source>reunion.invitados.min</source>
                 <target>Debes invitar al menos a una persona</target>
             </trans-unit>
+            <trans-unit id="5">
+                <source>reunion.preReserva.fecha.not_blank</source>
+                <target>Debe seleccionar una fecha para la pre-reserva</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>reunion.preReserva.horaInicio.not_blank</source>
+                <target>Debe seleccionar una hora de inicio para la pre-reserva</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>reunion.preReserva.horaFin.not_blank</source>
+                <target>Debe seleccionar una hora de fin para la pre-reserva</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>reunion.preReserva.recurso.not_blank</source>
+                <target>Debe seleccionar un recurso para la pre-reserva</target>
+            </trans-unit>
+            
+            
             
         </body>
     </file>

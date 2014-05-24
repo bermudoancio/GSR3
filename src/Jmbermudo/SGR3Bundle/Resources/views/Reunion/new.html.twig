@@ -49,10 +49,14 @@
                         
                         <div class="col-lg-12 col_prereservas">
                             {{ form_label(form.prereservas) }}
-                            {{ form_errors(form.prereservas) }}
                             <br/>
                             <ul class="prereservas" data-prototype="{{ form_widget(form.prereservas.vars.prototype)|e }}">
-                                {{ form_widget(form.prereservas) }}
+                                {% for prereserva in form.prereservas %}
+                                    <li class="col-lg-6">
+                                    {{ form_errors(prereserva) }}
+                                    {{ form_widget(prereserva) }}
+                                    </li>
+                                {% endfor %}
                             </ul>
                             <a href="#" class="btn btn-info add_link"><i class="glyphicon glyphicon-plus-sign"></i> {% trans %}reunion.addPreReserva{% endtrans %}</a>
                         </div>
