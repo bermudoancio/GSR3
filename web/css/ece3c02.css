@@ -366,8 +366,8 @@ th {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url("/sgr3/SGR3/web/css/fonts/bootstrap/glyphicons-halflings-regular.eot");
-  src: url("/sgr3/SGR3/web/css/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/sgr3/SGR3/web/css/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("/sgr3/SGR3/web/css/fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("/sgr3/SGR3/web/css/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg");
+  src: url("/bermudo/css/fonts/bootstrap/glyphicons-halflings-regular.eot");
+  src: url("/bermudo/css/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/bermudo/css/fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("/bermudo/css/fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("/bermudo/css/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg");
 }
 
 /* line 25, C:/Ruby193/lib/ruby/gems/1.9.1/gems/bootstrap-sass-3.1.1.1/vendor/assets/stylesheets/bootstrap/_glyphicons.scss */
@@ -7894,4 +7894,79 @@ button.close {
 /* line 11, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
 #loginbox .input-group {
   clear: both;
+}
+
+/* line 16, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.prereservas {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  -webkit-box-shadow: 0px 0px 5px #333333;
+  box-shadow: 0px 0px 5px #333333;
+  clear: both;
+  padding: 0;
+}
+
+/* line 23, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.prereservas li {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  -webkit-box-shadow: rgba(0, 0, 255, 0.4) 0 0 25px, rgba(0, 128, 0, 0.2) 0 0 3px 1px inset;
+  box-shadow: rgba(0, 0, 255, 0.4) 0 0 25px, rgba(0, 128, 0, 0.2) 0 0 3px 1px inset;
+  padding: 4px 10px;
+  margin: 1em 0;
+}
+
+/* line 30, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.bs-callout {
+  border-left: 3px solid #EEEEEE;
+  margin: 20px 0;
+  padding: 20px;
+}
+
+/* line 36, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.bs-callout h4 {
+  margin-bottom: 5px;
+  margin-top: 0;
+  font-size: 1em;
+}
+
+/* line 42, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.bs-callout-error {
+  background-color: #FDF7F7;
+  border-color: #D9534F;
+}
+
+/* line 47, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.bs-callout-error h4 {
+  color: #D9534F;
+}
+
+/* line 51, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.bs-callout-notice {
+  background-color: #F4F8FA;
+  border-color: #5BC0DE;
+}
+
+/* line 56, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.bs-callout-notice h4 {
+  color: #5BC0DE;
+}
+
+/* line 60, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.bs-callout-warning {
+  background-color: #FCF8F2;
+  border-color: #F0AD4E;
+}
+
+/* line 64, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.bs-callout-warning h4 {
+  color: #F0AD4E;
 }
