@@ -78,6 +78,13 @@ class PreReserva
      * @ORM\JoinColumn(referencedColumnName="id")
      */
     private $reunion;
+    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="aceptada", type="boolean")
+     */
+    private $aceptada;
 
 
     /**
@@ -273,5 +280,46 @@ class PreReserva
     public function getReunion()
     {
         return $this->reunion;
+    }
+    
+    /**
+     * Este método calculará si esta pre-reserva se puede cerrar ya como reserva
+     * definitiva
+     */
+    public function esReservable()
+    {
+        $reservable = true;
+        
+        //Si tiene responsable, vemos si ha aceptado
+        if($this->getRecurso()->getResponsable() !== null){
+            if(!$this->responsableResponde || ($this->responsableResponde && !$this->responsableAcepta)){
+                $reservable = false;
+            }
+        }
+        
+        return $reservable;
+    }
+
+    /**
+     * Set aceptada
+     *
+     * @param boolean $aceptada
+     * @return PreReserva
+     */
+    public function setAceptada($aceptada)
+    {
+        $this->aceptada = $aceptada;
+
+        return $this;
+    }
+
+    /**
+     * Get aceptada
+     *
+     * @return boolean 
+     */
+    public function getAceptada()
+    {
+        return $this->aceptada;
     }
 }

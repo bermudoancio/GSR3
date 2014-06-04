@@ -131,3 +131,9 @@ jms_i18n_routing:
     default_locale: es
     locales: [es, en]
     strategy: prefix_except_default
+    
+parameters:
+    max_reuniones:              5
+    max_pre_reservas_reunion:   4
+    max_pre_reservas_total:     20
+    duracion_reunion:           10

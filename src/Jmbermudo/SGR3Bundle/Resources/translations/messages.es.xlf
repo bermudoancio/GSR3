@@ -176,6 +176,22 @@
                 <source>reunion.aviso_responsable</source>
                 <target>Se le solicita permiso para reservar un recurso</target>
             </trans-unit>
+            <trans-unit id="522">
+                <source>reunion.prereserva_anulada</source>
+                <target>La pre-reserva a la que intenta acceder ha sido anulada</target>
+            </trans-unit>
+            <trans-unit id="523">
+                <source>reunion.prereserva_ya_aceptada</source>
+                <target>La pre-reserva que intentas aceptar ya ha sido aceptada anteriormente</target>
+            </trans-unit>
+            <trans-unit id="524">
+                <source>reunion.prereserva_no_existe</source>
+                <target>No se encuentra la pre-reserva solicitada</target>
+            </trans-unit>
+            <trans-unit id="525">
+                <source>reunion.prereserva_sin_permiso</source>
+                <target>No puedes acceder a esta página. Debes ser administrador o responsable del recurso</target>
+            </trans-unit>
             
         </body>
     </file>

@@ -274,13 +274,24 @@ class Reunion
     }
     
     /**
-     * @TODO: generar contenido
      * Esta función devolverá la pre-reserva aceptada (en caso de que la hubiera)
-     * o NULL en caso contrario
+     * o NULL en caso contrario. Aún habrá que comprobar que la pre-reserva es
+     * reservable, es decir, si el responsable (si lo hubiera), ha aceptado
      */
-    public function getReserva()
+    public function getReservaAceptada()
     {
-        return NULL;
+        $aceptada = null;
+        
+        if(!$this->getAnulada()){
+            foreach($this->prereservas as $prereserva){
+                if($prereserva->getAceptada()){
+                    $aceptada = $prereserva;
+                    break;
+                }
+            }
+        }
+        
+        return $aceptada;
     }
 
     /**

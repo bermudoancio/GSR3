@@ -1,3 +1,7 @@
+jmbermudo_lsi_user:
+    resource: "@JmbermudoLsiUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
 #El código de abajo importa las rutas básicas para login y logout de FOSUserBundle
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"

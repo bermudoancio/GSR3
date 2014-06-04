@@ -360,6 +360,81 @@ class ReunionController extends Controller
     }
     
     /**
+     * Esta función mostrará el formulario para que el responsable de un recurso
+     * acepte o rechace la solicitud de reunión
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $id El identificador de la prereserva
+     */
+    public function respuestaResponsableShowAction(Request $request, $id)
+    {
+        /*
+         * Comprobamos los permisos y existencia de recursos.
+         * Este método lanza las excepciones oportunas que darán lugar a los mensajes
+         * de error oportunos si hubiera algún error.
+         */
+        $this->checkResponsableRecurso($request, $id);
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
+        
+        //Si no ha habido excepciones, continuamos.
+        //Comprobamos que la pre-reserva no esté aceptada ya
+        if($preReserva->getAceptada()){
+            // add flash messages
+            $request->getSession()->getFlashBag()->add(
+                    'error', $this->get('translator')->trans('reunion.prereserva_ya_aceptada')
+            );
+
+            return $this->redirect($this->generateUrl('jmbermudo_sgr3_homepage'));
+        }
+        
+        return $this->render('JmbermudoSGR3Bundle:Reunion:prereserva_autorizacion.html.twig', array(
+            'preReserva'      => $preReserva,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+    
+    public function respuestaResponsableAction(Request $request, $id)
+    {
+
+    }
+    
+    private function checkResponsableRecurso(Request $request, $id)
+    {
+        /*
+         * Primero de todo, realizamos las comprobaciones oportunas:
+         *  - La pre-reserva existe y no está anulada
+         *  - El recurso pre-reservado tiene responsable
+         *  - Este responsable es el usuario que intenta acceder o el administrador
+         */
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
+        
+        if(!$preReserva){
+            throw $this->createNotFoundException($this->get('translator')->trans('reunion.prereserva_no_existe'));
+        }
+        
+        if($preReserva->getAnulada()){
+            throw new AccessDeniedException($this->get('translator')->trans('reunion.prereserva_anulada'));
+        }
+        
+        $recurso = $preReserva->getRecurso();
+                
+        if($recurso->getResponsable() === null 
+                || false === $this->get('security.context')->isGranted('ROLE_ADMIN')
+                && $this->getUser() !== $recurso->getResponsable()){
+            throw new AccessDeniedException($this->get('translator')->trans('reunion.prereserva_sin_permiso'));
+        }
+    }
+    
+    
+    
+    /**
      * Esta función comprobará si las prereservas de una reunión son válidas.
      * Para ello, comprobaremos una a una si existe alguna imposibilidad de realizar
      * las prereservas con otras ya existentes.

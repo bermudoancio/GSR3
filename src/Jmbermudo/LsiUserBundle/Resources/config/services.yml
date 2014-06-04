@@ -1,0 +1,7 @@
+parameters:
+#    jmbermudo_lsi_user.example.class: Jmbermudo\LsiUserBundle\Example
+
+services:
+#    jmbermudo_lsi_user.example:
+#        class: %jmbermudo_lsi_user.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,0 +1,66 @@
+// customize bootstrap variables here:
+@import "base";
+@import "variables";
+
+//Variables a declarar
+$icon-font-path: "/css/fonts/bootstrap/";
+
+@import "bootstrap";
+
+//Corrección de estilos para el login, que haremos extensible para todo. Sin esto, falla en Firefox
+#loginbox .input-group {
+    clear: both;
+}
+
+//Padding a 0 para las listas de prereservas de una reunión
+.prereservas {
+    @include inline-block;
+    @include single-box-shadow;
+    clear: both;
+    padding: 0;
+}
+
+.prereservas li {
+    @include inline-block;
+    @include box-shadow(rgba(blue, 0.4) 0 0 25px, rgba(green, 0.2) 0 0 3px 1px inset);
+    padding: 4px 10px;
+    margin: 1em 0;
+}
+
+.bs-callout {
+    border-left: 3px solid #EEEEEE;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.bs-callout h4 {
+    margin-bottom: 5px;
+    margin-top: 0;
+    font-size: 1em;
+}
+
+.bs-callout-error {
+    background-color: #FDF7F7;
+    border-color: #D9534F;
+}
+
+.bs-callout-error h4 {
+    color: #D9534F;
+}
+
+.bs-callout-notice {
+    background-color: #F4F8FA;
+    border-color: #5BC0DE;
+}
+
+.bs-callout-notice h4 {
+    color: #5BC0DE;
+}
+
+.bs-callout-warning {
+    background-color: #FCF8F2;
+    border-color: #F0AD4E;
+}
+.bs-callout-warning h4 {
+    color: #F0AD4E;
+}
