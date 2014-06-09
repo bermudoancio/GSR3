@@ -1,0 +1,7 @@
+Hola,
+
+{{ responsable }} ha aceptado la pre-reserva de la reunión {{ preReserva.reunion.nombrePublico }}, que se había planeado para el día {{ preReserva.fecha | localizeddate('medium', 'none', app.request.locale )}} de {{ preReserva.horaInicio | localizeddate('none', 'medium', app.request.locale ) }} a {{ preReserva.horaFin | localizeddate('none', 'medium', app.request.locale ) }}
+
+Esta pre-reserva puede ser aceptada a partir de ahora.
+
+Un saludo.

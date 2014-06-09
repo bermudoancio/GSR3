@@ -1,30 +1,7 @@
-prereserva:
-    pattern:  /
-    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:index" }
-
-prereserva_show:
-    pattern:  /{id}/show
-    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:show" }
-
-prereserva_new:
-    pattern:  /new
-    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:new" }
-
-prereserva_create:
-    pattern:  /create
-    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:create" }
-    requirements: { _method: post }
-
-prereserva_edit:
-    pattern:  /{id}/edit
-    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:edit" }
-
-prereserva_update:
-    pattern:  /{id}/update
-    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:update" }
-    requirements: { _method: post|put }
-
-prereserva_delete:
-    pattern:  /{id}/delete
-    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:delete" }
-    requirements: { _method: post|delete }
+prereserva_respuesta_responsable_show:
+    pattern:  /respuesta_responsable/{id}
+    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:respuestaResponsableShow" }
+    
+prereserva_respuesta_responsable_action:
+    pattern:  /respuesta_responsable_action/{id}
+    defaults: { _controller: "JmbermudoSGR3Bundle:PreReserva:respuestaResponsable" }

@@ -14,210 +14,201 @@ use Jmbermudo\SGR3Bundle\Form\PreReservaType;
  */
 class PreReservaController extends Controller
 {
-
+    
     /**
-     * Lists all PreReserva entities.
-     *
+     * Esta función mostrará el formulario para que el responsable de un recurso
+     * acepte o rechace la solicitud de reunión
+     * 
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $id El identificador de la prereserva
      */
-    public function indexAction()
+    public function respuestaResponsableShowAction(Request $request, $id)
     {
+        /*
+         * Comprobamos los permisos y existencia de recursos.
+         * Este método lanza las excepciones oportunas que darán lugar a los mensajes
+         * de error oportunos si hubiera algún error.
+         */
+        $this->checkResponsableRecurso($request, $id);
+        
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->findAll();
+        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
+        
+        //Si no ha habido excepciones, continuamos.
+        //Comprobamos que la pre-reserva no esté aceptada ya
+        if($preReserva->getAceptada()){
+            // add flash messages
+            $request->getSession()->getFlashBag()->add(
+                    'error', $this->get('translator')->trans('reunion.prereserva_ya_aceptada')
+            );
 
-        return $this->render('JmbermudoSGR3Bundle:PreReserva:index.html.twig', array(
-            'entities' => $entities,
-        ));
-    }
-    /**
-     * Creates a new PreReserva entity.
-     *
-     */
-    public function createAction(Request $request)
-    {
-        $entity = new PreReserva();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('prereserva_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('jmbermudo_sgr3_homepage'));
         }
-
-        return $this->render('JmbermudoSGR3Bundle:PreReserva:new.html.twig', array(
-            'entity' => $entity,
+        
+        $form = $this->createResponsableForm($preReserva->getId());
+        
+        return $this->render('JmbermudoSGR3Bundle:PreReserva:prereserva_autorizacion.html.twig', array(
+            'preReserva'      => $preReserva,
             'form'   => $form->createView(),
         ));
     }
-
-    /**
-    * Creates a form to create a PreReserva entity.
-    *
-    * @param PreReserva $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createCreateForm(PreReserva $entity)
+    
+    public function respuestaResponsableAction(Request $request, $id)
     {
-        $form = $this->createForm(new PreReservaType(), $entity, array(
-            'action' => $this->generateUrl('prereserva_create'),
-            'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new PreReserva entity.
-     *
-     */
-    public function newAction()
-    {
-        $entity = new PreReserva();
-        $form   = $this->createCreateForm($entity);
-
-        return $this->render('JmbermudoSGR3Bundle:PreReserva:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a PreReserva entity.
-     *
-     */
-    public function showAction($id)
-    {
+        /*
+         * Comprobamos los permisos y existencia de recursos.
+         * Este método lanza las excepciones oportunas que darán lugar a los mensajes
+         * de error oportunos si hubiera algún error.
+         */
+        $this->checkResponsableRecurso($request, $id);
+        
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
+        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
+        
+        //Si no ha habido excepciones, continuamos.
+        //Comprobamos que la pre-reserva no esté aceptada ya
+        if($preReserva->getAceptada()){
+            // add flash messages
+            $request->getSession()->getFlashBag()->add(
+                    'error', $this->get('translator')->trans('reunion.prereserva_ya_aceptada')
+            );
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find PreReserva entity.');
+            return $this->redirect($this->generateUrl('jmbermudo_sgr3_homepage'));
         }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('JmbermudoSGR3Bundle:PreReserva:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        ));
-    }
-
-    /**
-     * Displays a form to edit an existing PreReserva entity.
-     *
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find PreReserva entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('JmbermudoSGR3Bundle:PreReserva:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-    * Creates a form to edit a PreReserva entity.
-    *
-    * @param PreReserva $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(PreReserva $entity)
-    {
-        $form = $this->createForm(new PreReservaType(), $entity, array(
-            'action' => $this->generateUrl('prereserva_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
-    /**
-     * Edits an existing PreReserva entity.
-     *
-     */
-    public function updateAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find PreReserva entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('prereserva_edit', array('id' => $id)));
-        }
-
-        return $this->render('JmbermudoSGR3Bundle:PreReserva:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-    /**
-     * Deletes a PreReserva entity.
-     *
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createResponsableForm($preReserva->getId());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find PreReserva entity.');
+            //Veamos qué ha respondido el responsable (o el admin)
+            if($form->get($this->get('translator')->trans('reunion.aceptar'))->isClicked()){
+                //Se acepta la pre-reserva
+                $preReserva->setResponsableResponde(true);
+                $preReserva->setResponsableAcepta(true);
+                
+                //"Desanulamos" la pre-reserva en caso de que se hubiera anulado
+                $preReserva->setAnulada(false);
+                
+                //Y avisamos al responsable
+                $this->avisaResponsableValidacionPreReserva($request, $preReserva, true);
             }
-
-            $em->remove($entity);
+            else{
+                //Ha rechazado la pre-reserva
+                $preReserva->setResponsableResponde(true);
+                $preReserva->setResponsableAcepta(false);
+                
+                //Anulamos la pre-reserva
+                $preReserva->setAnulada(true);
+                
+                //Y avisamos al responsable
+                $this->avisaResponsableValidacionPreReserva($request, $preReserva, false);
+            }
+            
+            //Guardamos los cambios
             $em->flush();
+            
+            // add flash messages
+            $request->getSession()->getFlashBag()->add(
+                    'success', $this->get('translator')->trans('reunion.validacionPreReservaRecursoOK')
+            );
+            
+            return $this->redirect($this->generateUrl('jmbermudo_sgr3_homepage'));
         }
-
-        return $this->redirect($this->generateUrl('prereserva'));
+        
+        return $this->render('JmbermudoSGR3Bundle:PreReserva:prereserva_autorizacion.html.twig', array(
+            'preReserva'      => $preReserva,
+            'form'   => $form->createView(),
+        ));
     }
+    
+    private function createResponsableForm($id)
+    {
+        //Creamos el formulario sin objeto adjunto
+        $defaultData = array('prereserva' => $id);
+        $form = $this->createFormBuilder($defaultData)
+            ->add('prereserva', 'hidden')
+            ->add($this->get('translator')->trans('reunion.aceptar'), 'submit')
+            ->add($this->get('translator')->trans('reunion.rechazar'), 'submit')
+            ->setAction($this->generateUrl('prereserva_respuesta_responsable_action', array('id' => $id)))
+            ->getForm();
+        
+        return $form;
+    }
+    
+    private function checkResponsableRecurso(Request $request, $id)
+    {
+        /*
+         * Primero de todo, realizamos las comprobaciones oportunas:
+         *  - La pre-reserva existe y no está anulada
+         *  - El recurso pre-reservado tiene responsable
+         *  - Este responsable es el usuario que intenta acceder o el administrador
+         */
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($id);
+        
+        if(!$preReserva){
+            throw $this->createNotFoundException($this->get('translator')->trans('reunion.prereserva_no_existe'));
+        }
+        
+        if($preReserva->getAnulada()){
+            throw new AccessDeniedException($this->get('translator')->trans('reunion.prereserva_anulada'));
+        }
+        
+        $recurso = $preReserva->getRecurso();
+                
+        if($recurso->getResponsable() === null 
+                || false === $this->get('security.context')->isGranted('ROLE_ADMIN')
+                && $this->getUser() !== $recurso->getResponsable()){
+            throw new AccessDeniedException($this->get('translator')->trans('reunion.prereserva_sin_permiso'));
+        }
+    }
+    
+    
+    private function avisaResponsableValidacionPreReserva($request, $preReserva, $acepta)
+    {
+        //Valores por defecto suponiendo que acepta
+        $asunto = $this->get('translator')->trans('reunion.validacionPreReservaResponsableAcepta');
+        $email = $preReserva->getReunion()->getCreador()->getEmail();
+        $plantilla = 'JmbermudoSGR3Bundle:PreReserva:email/email_responsable_acepta_' . $request->getLocale() . '.txt.twig';
+        if(!$acepta){
+            $asunto = $this->get('translator')->trans('reunion.validacionPreReservaResponsableRechaza');
+            $plantilla = 'JmbermudoSGR3Bundle:PreReserva:email/email_responsable_rechaza_' . $request->getLocale() . '.txt.twig';
+        }
+        
+        $this->sendMail(
+                $asunto,
+                $email, 
+                $plantilla, 
+                array(
+                    'preReserva' => $preReserva,
+                    'responsable' => $this->getUser()
+                )
+            );
+    }
+    
 
     /**
-     * Creates a form to delete a PreReserva entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * Método que realiza el envío de emails. Si se cambia el mecanismo, cambiar sólo aquí.
+     * @param string $asunto
+     * @param string $para
+     * @param string $plantilla
+     * @param array $parametros
      */
-    private function createDeleteForm($id)
+    private function sendMail($asunto, $para, $plantilla, $parametros)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('prereserva_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+        $message = \Swift_Message::newInstance()
+                ->setSubject($this->get('translator')->trans('global.name') . ': ' . $asunto)
+                ->setFrom($this->container->getParameter('mailer_user'))
+                ->setTo($para)
+                ->setBody(
+                    $this->renderView(
+                        $plantilla,
+                        $parametros
+                    )
+                );            
+            $this->get('mailer')->send($message);
     }
 }

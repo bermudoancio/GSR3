@@ -1,0 +1,63 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{% trans %}global.name{% endtrans %} - {% trans %}reunion.validarPreReservaEnRecurso{% endtrans %}{% endblock title %}
+
+{% block content %}
+    {{ parent() }}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {% trans %}reunion.validarPreReservaEnRecurso{% endtrans %}
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-8 col-lg-8 col-sm-12">
+                            <div class="inner_box">
+                                <h2>Datos de la Pre-reserva</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <th>{% trans %}preReserva.recursoSolicitado{% endtrans %}</th>
+                                                <td>{{preReserva.recurso}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>{% trans %}reunion.nombreReunion{% endtrans %}</th>
+                                                <td>{{preReserva.reunion.nombrePublico}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>{% trans %}reunion.organiza{% endtrans %}</th>
+                                                <td>{{preReserva.reunion.creador}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>{% trans %}preReserva.fecha{% endtrans %}</th>
+                                                <td>{{ preReserva.fecha | localizeddate('medium', 'none', app.request.locale )}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>{% trans %}reunion.horario{% endtrans %}</th>
+                                                <td>{% trans with {'%inicio%': preReserva.horaInicio | localizeddate('none', 'medium', app.request.locale ), '%fin%': preReserva.horaFin | localizeddate('none', 'medium', app.request.locale )} %}reunion.horario_de{% endtrans %}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            {{ form(form) }}
+                        </div>
+                    </div>
+                    
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+        
+        <a href="{{ path('jmbermudo_sgr3_homepage') }}" class="btn btn-info"><i class="glyphicon glyphicon-backward"></i> {% trans %}global.volver{% endtrans %}</a>
+        
+    </div>
+    <!-- /.row -->
+{% endblock %}

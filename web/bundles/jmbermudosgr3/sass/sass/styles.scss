@@ -3,7 +3,7 @@
 @import "variables";
 
 //Variables a declarar
-$icon-font-path: "/bermudo/css/fonts/bootstrap/";
+$icon-font-path: "/sgr3/SGR3/web/css/fonts/bootstrap/";
 
 @import "bootstrap";
 
@@ -48,12 +48,12 @@ $icon-font-path: "/bermudo/css/fonts/bootstrap/";
     color: #D9534F;
 }
 
-.bs-callout-notice {
+.bs-callout-success {
     background-color: #F4F8FA;
     border-color: #5BC0DE;
 }
 
-.bs-callout-notice h4 {
+.bs-callout-success h4 {
     color: #5BC0DE;
 }
 

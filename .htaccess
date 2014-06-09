@@ -1,14 +1,14 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine on
-    RewriteBase /bermudo/
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-
-    # DEV ENVIRONMENT #
-    #RewriteRule ^$ bermudo/web/app_dev.php [QSA]
-    #RewriteRule ^(.*)$ bermudo/web/app_dev.php/$1 [QSA,L]
-
-    # PROD ENVIRONMENT #
-    RewriteRule ^$ /bermudo/public_html/app.php [QSA]
-    RewriteRule ^(.*)$ /bermudo/public_html/app.php/$1 [QSA,L]
-</IfModule>
+#<IfModule mod_rewrite.c>
+#    RewriteEngine on
+#    RewriteBase /bermudo/
+#    RewriteCond %{REQUEST_FILENAME} !-f
+#    RewriteCond %{REQUEST_FILENAME} !-d
+#
+#    # DEV ENVIRONMENT #
+#    #RewriteRule ^$ bermudo/web/app_dev.php [QSA]
+#    #RewriteRule ^(.*)$ bermudo/web/app_dev.php/$1 [QSA,L]
+#
+#    # PROD ENVIRONMENT #
+#    RewriteRule ^$ /bermudo/public_html/app.php [QSA]
+#    RewriteRule ^(.*)$ /bermudo/public_html/app.php/$1 [QSA,L]
+#</IfModule>

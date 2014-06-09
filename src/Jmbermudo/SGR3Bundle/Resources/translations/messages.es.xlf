@@ -192,6 +192,54 @@
                 <source>reunion.prereserva_sin_permiso</source>
                 <target>No puedes acceder a esta página. Debes ser administrador o responsable del recurso</target>
             </trans-unit>
+            <trans-unit id="526">
+                <source>reunion.aceptar</source>
+                <target>Aceptar</target>
+            </trans-unit>
+            <trans-unit id="527">
+                <source>reunion.rechazar</source>
+                <target>Rechazar</target>
+            </trans-unit>
+            <trans-unit id="528">
+                <source>reunion.validarPreReservaEnRecurso</source>
+                <target>Validación de prereserva en recursos con responsable</target>
+            </trans-unit>
+            <trans-unit id="529">
+                <source>reunion.nombreReunion</source>
+                <target>Nombre de la reunión</target>
+            </trans-unit>
+            <trans-unit id="530">
+                <source>reunion.organiza</source>
+                <target>Organiza</target>
+            </trans-unit>
+            <trans-unit id="531">
+                <source>reunion.horario</source>
+                <target>Horario</target>
+            </trans-unit>
+            <trans-unit id="532">
+                <source>reunion.horario_de</source>
+                <target>De %inicio% a %fin%</target>
+            </trans-unit>
+            <trans-unit id="533">
+                <source>reunion.validacionPreReservaRecursoOK</source>
+                <target>Se han guardado los cambios para esta pre-reserva y se ha avisado al creador. ¡Gracias!</target>
+            </trans-unit>
+            <trans-unit id="534">
+                <source>reunion.validacionPreReservaResponsableAcepta</source>
+                <target>El responsable del recurso ha aceptado la pre-reserva</target>
+            </trans-unit>
+            <trans-unit id="535">
+                <source>reunion.validacionPreReservaResponsableRechaza</source>
+                <target>El responsable del recurso ha rechazado la pre-reserva</target>
+            </trans-unit>
+            <trans-unit id="550">
+                <source>preReserva.fecha</source>
+                <target>Fecha</target>
+            </trans-unit>
+            <trans-unit id="551">
+                <source>preReserva.recursoSolicitado</source>
+                <target>Recurso solicitado</target>
+            </trans-unit>
             
         </body>
     </file>
