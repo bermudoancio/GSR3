@@ -240,6 +240,14 @@
                 <source>preReserva.recursoSolicitado</source>
                 <target>Recurso solicitado</target>
             </trans-unit>
+            <trans-unit id="552">
+                <source>preReserva.previamenteAceptada</source>
+                <target>¡Atención! Esta autorización ya había sido ACEPTADA anteriormente</target>
+            </trans-unit>
+            <trans-unit id="553">
+                <source>preReserva.previamenteRechazada</source>
+                <target>¡Atención! Esta autorización ya había sido RECHAZADA anteriormente</target>
+            </trans-unit>
             
         </body>
     </file>

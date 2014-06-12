@@ -7950,13 +7950,13 @@ button.close {
 }
 
 /* line 51, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
-.bs-callout-notice {
+.bs-callout-success {
   background-color: #F4F8FA;
   border-color: #5BC0DE;
 }
 
 /* line 56, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
-.bs-callout-notice h4 {
+.bs-callout-success h4 {
   color: #5BC0DE;
 }
 

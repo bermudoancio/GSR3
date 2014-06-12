@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Jmbermudo\SGR3Bundle\Entity\PreReserva;
 use Jmbermudo\SGR3Bundle\Form\PreReservaType;
 
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 /**
  * PreReserva controller.
  *

@@ -2,6 +2,17 @@
 
 {% block title %}{% trans %}global.name{% endtrans %} - {% trans %}reunion.validarPreReservaEnRecurso{% endtrans %}{% endblock title %}
 
+{% block javascripts_bottom %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/jmbermudosgr3/js/i18n/' ~ app.request.locale ~ '.js' ) }}" ></script>
+
+    {% javascripts 'bundles/jmbermudosgr3/js/_pages/respuesta_responsable.js'%}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
 {% block content %}
     {{ parent() }}
 
@@ -17,6 +28,18 @@
                         <div class="col-md-8 col-lg-8 col-sm-12">
                             <div class="inner_box">
                                 <h2>Datos de la Pre-reserva</h2>
+                                
+                                {% if preReserva.responsableResponde %}
+                                {# Mostraremos un cuadro indicando que la reserva ya se había respondido anteriormente #}
+                                <div class="bs-callout bs-callout-warning">
+                                    {% if preReserva.responsableAcepta %}
+                                        {% trans %}preReserva.previamenteAceptada{% endtrans %}
+                                    {% else %}
+                                        {% trans %}preReserva.previamenteRechazada{% endtrans %}
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                                
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
                                         <tbody>
