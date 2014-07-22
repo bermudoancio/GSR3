@@ -77,6 +77,8 @@ class ReunionController extends Controller
         $mensajes_error = $this->checkPreReservas($request, $preReservas);
         
         if(count($mensajes_error) > 0){
+            //Esto está comentado porque no se puede añadir el mensaje a la pre-reserva
+            //individual. Al menos todavía
 //            foreach ($preReservas as $preReserva) {
 //                $obj_serializado = serialize($preReserva);
 //                if(array_key_exists($obj_serializado, $mensajes_error)){
@@ -102,6 +104,7 @@ class ReunionController extends Controller
             //Tenemos que darle los valores básicos a la pre-reserva
             foreach ($preReservas as $preReserva) {
                 $preReserva->setAnulada(false);
+                $preReserva->setAceptada(false);
                 $preReserva->setReunion($entity);
                 
                 //comprobamos si el recurso tiene responsable, y le avisamos
@@ -285,7 +288,7 @@ class ReunionController extends Controller
             $em->flush();
             
             //Por último, avisamos de la modificación
-            $this->avisaModificacion();
+            $this->avisaModificacion($entity, $request);
             
             // add flash messages
             $request->getSession()->getFlashBag()->add(

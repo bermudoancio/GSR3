@@ -1,6 +1,6 @@
 jmbermudo_sgr3_homepage:
-    path:  /{name}
-    defaults: { _controller: JmbermudoSGR3Bundle:Default:index, name: pepe }
+    path:  /personal
+    defaults: { _controller: JmbermudoSGR3Bundle:Default:index }
 
 JmbermudoSGR3Bundle_recurso:
     resource: "@JmbermudoSGR3Bundle/Resources/config/routing/recurso.yml"
@@ -17,3 +17,11 @@ JmbermudoSGR3Bundle_prereservas:
 jmbermudo_sgr3_admin_listar_recursos:
     path:   /admin/listarRecursos
     defaults: { _controller: JmbermudoSGR3Bundle:Admin:listarRecursos }
+    
+jmbermudo_sgr3_index_public:
+    pattern: /
+    defaults: { _controller: JmbermudoSGR3Bundle:Public:index }
+
+index:
+    pattern: /index
+    defaults: { _controller: JmbermudoSGR3Bundle:Daemon:index }

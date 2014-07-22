@@ -1,0 +1,13 @@
+Hola {{ invitado }},
+
+La reunión "{{ nombre }}" está a punto de expirar.
+
+{% if porcentaje > porcentaje_min %}
+    El porcentaje de participación es {{ porcentaje }}, que es mayor del necesario para aceptarla automáticamente, por lo que si no se acepta manualmente, el sistema la aceptará el día de la fecha límite.
+{% else %}
+    El porcentaje de participación es {{ porcentaje }}, que es MENOR del necesario para aceptarla automáticamente. Deberá aceptarla manualmente, o de lo contrario la reunión se cancelará automáticamente el día de la fecha límite. Un email informando de esto se ha enviado a l@s invitad@s que todavía no hayan votado.
+{% endif %}
+
+La fecha límite para la votación es: {{ fecha_max }}
+
+¡Un cordial saludo!

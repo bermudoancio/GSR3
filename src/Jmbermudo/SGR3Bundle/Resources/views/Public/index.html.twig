@@ -1,0 +1,52 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}{% trans %}global.name{% endtrans %} - {% trans %}global.homepage{% endtrans %}{% endblock title %}
+
+{% block content %}
+    {{ parent() }}
+
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {% trans %}reunion.proximas_reuniones{% endtrans %}
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    {% if reuniones is empty%}
+                    <span>{% trans %}reunion.sin_reuniones_programadas{% endtrans %}</span>
+                    {% else %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans %}reunion.nombre{% endtrans %}</th>
+                                        <th>{% trans %}preReserva.fecha{% endtrans %}</th>
+                                        <th>{% trans %}reunion.recurso{% endtrans %}</th>
+                                        <th>{% trans %}reunion.estado{% endtrans %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for preReserva in reuniones %}
+                                    <tr class="success">
+                                        <td><a href='{{ path('reunion_show', { 'id': preReserva.reunion.id }) }}'>{{ preReserva.reunion.nombrePublico }}</a></td>
+                                        <td>{{ preReserva.fecha | localizeddate('medium', 'none', app.request.locale ) }} ({{ preReserva.horaInicio | localizeddate('none', 'medium', app.request.locale ) }} - {{ preReserva.horaFin | localizeddate('none', 'medium', app.request.locale ) }})</td>
+                                        <td>{{ preReserva.recurso.nombre }}</td>
+                                        <td>Creada</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    {% endif %}
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+    </div>
+    <!-- /.row -->
+
+{% endblock content %}

@@ -1,0 +1,9 @@
+Hola {{ invitado }},
+
+la reunión con nombre {{ nombre }} ha sido ACEPTADA automáticamente con los siguientes datos:
+
+Fecha: {{ preReserva.fecha | localizeddate('medium', 'none', app.request.locale ) }}
+Hora: {{ preReserva.horaInicio | localizeddate('none', 'medium', app.request.locale ) }} - {{ preReserva.horaFin | localizeddate('none', 'medium', app.request.locale ) }}
+Lugar: {{ preReserva.recurso }}
+
+Un cordial saludo

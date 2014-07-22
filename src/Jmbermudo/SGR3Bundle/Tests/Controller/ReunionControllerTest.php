@@ -3,9 +3,46 @@
 namespace Jmbermudo\SGR3Bundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ReunionControllerTest extends WebTestCase
 {
+    private $client = null;
+
+    public function setUp()
+    {
+        $this->client = static::createClient(array(), array('DOCUMENT_ROOT' => '/', 'HTTP_HOST' => 'www.mysgr3.com'));
+        $this->client->followRedirects(true);
+    }
+    
+    public function testLogin()
+    {
+        $crawler = $this->client->request('GET', '/login');
+        $form = $crawler->selectButton('Entrar')->form(array(
+            '_username' => 'jose',
+            '_password' => 'amarillo',
+        ));
+        $this->client->submit($form);
+        
+        $this->assertTrue($this->client->getResponse()->isRedirect('/personal'), "El login salio mal");
+    }
+
+    public function testCreacionReunion()
+    {
+        //$this->doLogin();
+        //$this->client->followRedirects(false);
+        //Cremos el navegador
+        $crawler = $this->client->request('GET', '/');
+        
+        echo $this->client->getResponse();
+        
+        $this->assertTrue($this->client->getResponse()->isRedirect('/login'), "No se pudo completar la peticion de inicio");
+        //$this->assertTrue($crawler->filter('html:contains("Server Configuration")')->count() > 0);
+        
+    }
+    
+    
     /*
     public function testCompleteScenario()
     {

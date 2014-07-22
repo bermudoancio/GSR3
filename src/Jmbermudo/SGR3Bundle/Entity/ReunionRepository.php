@@ -12,4 +12,42 @@ use Doctrine\ORM\EntityRepository;
  */
 class ReunionRepository extends EntityRepository
 {
+    public function getReunionesActivas($max = 10)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+                'SELECT pr FROM JmbermudoSGR3Bundle:Prereserva pr '
+                . 'WHERE DATE(pr.fecha) >= CURRENT_DATE() '
+                . 'AND pr.anulada = 0 '
+                . 'AND pr.aceptada = 1 '
+            );
+        $query->setMaxResults($max);
+            
+        return $query->getResult();
+    }
+    
+    /**
+     * Esta función devuelve aquellas reuniones que todavía no se han aceptado
+     * ni cancelado, y cuya fecha de expiración es dentro de $dias días
+     * @param \DateTime fecha
+     * @return type
+     */
+    public function getReunionesExpiranEn($fecha)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+                'SELECT r FROM JmbermudoSGR3Bundle:Reunion r '
+                . 'WHERE DATE(r.fechaCreacion) = DATE(:fecha) '
+                . 'AND r.anulada = 0 '
+                . 'AND NOT EXISTS ( '
+                    . 'SELECT pr FROM JmbermudoSGR3Bundle:Prereserva pr '
+                    . 'WHERE pr.reunion = r.id '
+                    . 'AND pr.aceptada = 1 '
+                . ')'
+            );
+
+        $query->setParameter('fecha', $fecha);
+            
+        return $query->getResult();
+    }
 }

@@ -232,6 +232,42 @@
                 <source>reunion.validacionPreReservaResponsableRechaza</source>
                 <target>El responsable del recurso ha rechazado la pre-reserva</target>
             </trans-unit>
+            <trans-unit id="536">
+                <source>reunion.proximas_reuniones</source>
+                <target>Próximas reuniones</target>
+            </trans-unit>
+            <trans-unit id="537">
+                <source>reunion.sin_reuniones_programadas</source>
+                <target>No hay reuniones programadas</target>
+            </trans-unit>
+            <trans-unit id="538">
+                <source>reunion.recurso</source>
+                <target>Recurso</target>
+            </trans-unit>
+            <trans-unit id="539">
+                <source>reunion.prox_expiracion</source>
+                <target>La reunión "%reunion%" está a punto de expirar</target>
+            </trans-unit>
+            <trans-unit id="540">
+                <source>reunion.prox_expiracion_invitado</source>
+                <target>Todavía no ha votado para la reunión "%reunion%"</target>
+            </trans-unit>
+            <trans-unit id="541">
+                <source>reunion.cancelacion_auto_ok</source>
+                <target>La reunión "%reunion%" se ha cancelado automáticamente</target>
+            </trans-unit>
+            <trans-unit id="542">
+                <source>reunion.cancelacion_auto_invitado</source>
+                <target>La reunión %reunion% ha sido cancelada automáticamente</target>
+            </trans-unit>
+            <trans-unit id="543">
+                <source>reunion.aceptacion_auto_ok</source>
+                <target>La reunión "%reunion%" se ha ACEPTADO automáticamente</target>
+            </trans-unit>
+            <trans-unit id="544">
+                <source>reunion.aceptacion_auto_invitado</source>
+                <target>La reunión %reunion% se ha ACEPTADO automáticamente</target>
+            </trans-unit>
             <trans-unit id="550">
                 <source>preReserva.fecha</source>
                 <target>Fecha</target>
