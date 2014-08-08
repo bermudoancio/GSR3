@@ -25,6 +25,9 @@ security:
             
         
     access_control:
+        #Los demonios controladores SÓLO podrán accederse desde local o siendo administrador
+        - { path: ^/daemon/, roles: ROLE_ADMIN }
+        - { path: ^/daemon/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/public/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

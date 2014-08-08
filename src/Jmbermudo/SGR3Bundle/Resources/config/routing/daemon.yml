@@ -1,0 +1,3 @@
+daemon_index:
+    pattern:  /tareasDiarias
+    defaults: { _controller: "JmbermudoSGR3Bundle:Daemon:index" }

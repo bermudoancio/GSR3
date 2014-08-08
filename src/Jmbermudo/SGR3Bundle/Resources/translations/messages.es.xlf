@@ -86,6 +86,10 @@
                 <source>admin.listadoRecursos.noSeEncuentra</source>
                 <target>No se encuentra el recurso buscado</target>
             </trans-unit>
+            <trans-unit id="308">
+                <source>admin.envio_log_daemon</source>
+                <target>Log del día %fecha%</target>
+            </trans-unit>
             <trans-unit id="500">
                 <source>reunion.nuevaReunion</source>
                 <target>Nueva reunión</target>
@@ -283,6 +287,26 @@
             <trans-unit id="553">
                 <source>preReserva.previamenteRechazada</source>
                 <target>¡Atención! Esta autorización ya había sido RECHAZADA anteriormente</target>
+            </trans-unit>
+            <trans-unit id="5554">
+                <source>reunion.modificacion_invitado</source>
+                <target>Se ha modificado una reunión a la que estabas invitado</target>
+            </trans-unit>
+            <trans-unit id="1000">
+                <source>voto.votacion</source>
+                <target>Votación</target>
+            </trans-unit>
+            <trans-unit id="1001">
+                <source>voto.votacionReunion</source>
+                <target>Votación para la reunion %reunion%</target>
+            </trans-unit>
+            <trans-unit id="1002">
+                <source>voto.no_invitado</source>
+                <target>Lo sentimos, no estás invitado a esta reunión, por lo que no puedes participar</target>
+            </trans-unit>
+            <trans-unit id="1003">
+                <source>voto.votar</source>
+                <target>Votar</target>
             </trans-unit>
             
         </body>

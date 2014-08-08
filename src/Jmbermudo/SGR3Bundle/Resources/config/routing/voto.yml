@@ -1,0 +1,8 @@
+voto_show:
+    pattern:  /votar/{id}
+    defaults: { _controller: "JmbermudoSGR3Bundle:Voto:show" }
+
+voto_votar:
+    pattern:  /votacion
+    defaults: { _controller: "JmbermudoSGR3Bundle:Voto:votacion" }
+    requirements: { _method: post }

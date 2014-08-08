@@ -8,6 +8,8 @@ use Jmbermudo\SGR3Bundle\Entity\Reunion;
 
 class DaemonController extends Controller
 {
+    private $mensajes = array();
+    
     public function indexAction(Request $request)
     {
         /*
@@ -36,6 +38,20 @@ class DaemonController extends Controller
          * aceptadas
          */
         $this->cancelaExpiradas($request);
+        
+        //La fecha de hoy
+        $fecha = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+        $fecha_format = $this->formatFecha($fecha, $request);
+        
+        //Ahora mandamos el log al responsable del sistema
+        $this->enviaLog($request, $fecha_format);
+        
+        return $this->render('JmbermudoSGR3Bundle:Reunion:email/log_daemon_' . $request->getLocale() . '.txt.twig', 
+            array(
+                'fecha' => $fecha_format,
+                'mensajes' => $this->mensajes
+            )
+        );
     }
     
     private function avisaProximoFin(Request $request)
@@ -48,16 +64,24 @@ class DaemonController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $dias = $this->container->getParameter('dias_aviso_fin');
-        $fecha_max = new \DateTime();
-        $fecha_max->add(new DateInterval('P' . $dias . 'D'));
+        $fecha_max = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+        $fecha_max->add(new \DateInterval('P' . $dias . 'D'));
         
         $reuniones = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->getReunionesExpiranEn($fecha_max);
         
         foreach($reuniones as $reunion){
             //Avisamos al responsable e invitados
             //Formateamos la fecha
-            $fecha = $this->formatFecha($fecha_max);
-            $this->sendMailsAvisaProximoFin($reunion, $fecha, $this->container->getParameter('porcentaje_aceptacion'));
+            $fecha = $this->formatFecha($fecha_max, $request);
+            $this->sendMailsAvisaProximoFin($reunion, $fecha, $this->container->getParameter('porcentaje_aceptacion'), $request);
+            
+            //Añadimos una línea de log
+            $mensaje = $this->get('translator')->trans('reunion.prox_expiracion',
+                        array(
+                            '%reunion%' => $reunion->getNombrePublico()
+                        ));
+            
+            $this->mensajes[] = $mensaje;
         }
     }
     
@@ -70,8 +94,8 @@ class DaemonController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //restamos un día
-        $fecha_max = new \DateTime();
-        $fecha_max->sub(new DateInterval('P1D'));
+        $fecha_max = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+        $fecha_max->sub(new \DateInterval('P1D'));
         
         $reuniones = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->getReunionesExpiranEn($fecha_max);
         
@@ -83,7 +107,15 @@ class DaemonController extends Controller
             $em->flush();
             
             //Y avisamos al creador y a los participantes
-            $this->avisaAceptacionAutomatica($reunion, $request);
+            //$this->avisaAceptacionAutomatica($reunion, $request);
+            
+            //Añadimos una línea de log
+            $mensaje = $this->get('translator')->trans('reunion.aceptacion_auto_ok',
+                        array(
+                            '%reunion%' => $reunion->getNombrePublico()
+                        ));
+            
+            $this->mensajes[] = $mensaje;
         }
     }
     
@@ -101,8 +133,8 @@ class DaemonController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //restamos un día
-        $fecha_max = new \DateTime();
-        $fecha_max->sub(new DateInterval('P1D'));
+        $fecha_max = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+        $fecha_max->sub(new \DateInterval('P1D'));
         
         $reuniones = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->getReunionesExpiranEn($fecha_max);
         
@@ -113,6 +145,14 @@ class DaemonController extends Controller
             
             //Y avisamos al creador y a los participantes
             $this->avisaCancelacionAutomatica($reunion, $request);
+            
+            //Añadimos una línea de log
+            $mensaje = $this->get('translator')->trans('reunion.cancelacion_auto_ok',
+                        array(
+                            '%reunion%' => $reunion->getNombrePublico()
+                        ));
+            
+            $this->mensajes[] = $mensaje;
         }
     }
     
@@ -220,6 +260,23 @@ class DaemonController extends Controller
                 )
             );
         }
+    }
+    
+    private function enviaLog(Request $request, $fecha)
+    {
+        
+        $this->sendMail(
+                $this->get('translator')->trans('admin.envio_log_daemon',
+                        array(
+                            '%fecha%' => $fecha
+                        )),
+                $this->container->getParameter('mail_administrador'), 
+                'JmbermudoSGR3Bundle:Reunion:email/log_daemon_' . $request->getLocale() . '.txt.twig', 
+                array(
+                    'fecha' => $fecha,
+                    'mensajes' => $this->mensajes
+                )
+        );
     }
     
     

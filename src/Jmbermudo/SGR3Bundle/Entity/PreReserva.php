@@ -85,6 +85,11 @@ class PreReserva
      * @ORM\Column(name="aceptada", type="boolean")
      */
     private $aceptada;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Voto", mappedBy="preReserva", cascade={"all"})
+     **/
+    private $votaciones;
 
 
     /**
@@ -321,5 +326,45 @@ class PreReserva
     public function getAceptada()
     {
         return $this->aceptada;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->votaciones = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add votaciones
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Voto $votaciones
+     * @return PreReserva
+     */
+    public function addVotacione(\Jmbermudo\SGR3Bundle\Entity\Voto $votaciones)
+    {
+        $this->votaciones[] = $votaciones;
+
+        return $this;
+    }
+
+    /**
+     * Remove votaciones
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Voto $votaciones
+     */
+    public function removeVotacione(\Jmbermudo\SGR3Bundle\Entity\Voto $votaciones)
+    {
+        $this->votaciones->removeElement($votaciones);
+    }
+
+    /**
+     * Get votaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVotaciones()
+    {
+        return $this->votaciones;
     }
 }

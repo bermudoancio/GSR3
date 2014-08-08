@@ -52,6 +52,11 @@ class Usuario extends BaseUser
      * @ORM\ManyToMany(targetEntity="Reunion", mappedBy="invitados")
      **/
     private $reuniones;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Voto", mappedBy="usuario", cascade={"all"})
+     **/
+    private $votaciones;
 
 
     /**
@@ -240,4 +245,38 @@ class Usuario extends BaseUser
     {
         return $this->getNombre() . ' ' . $this->getApellidos();
     }
+
+    /**
+     * Add votaciones
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Voto $votaciones
+     * @return Usuario
+     */
+    public function addVotacione(\Jmbermudo\SGR3Bundle\Entity\Voto $votaciones)
+    {
+        $this->votaciones[] = $votaciones;
+
+        return $this;
+    }
+
+    /**
+     * Remove votaciones
+     *
+     * @param \Jmbermudo\SGR3Bundle\Entity\Voto $votaciones
+     */
+    public function removeVotacione(\Jmbermudo\SGR3Bundle\Entity\Voto $votaciones)
+    {
+        $this->votaciones->removeElement($votaciones);
+    }
+
+    /**
+     * Get votaciones
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVotaciones()
+    {
+        return $this->votaciones;
+    }
+    
 }

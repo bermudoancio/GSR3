@@ -41,6 +41,7 @@ class RecursoController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $entity->setActivo(true);
             $em->persist($entity);
             $em->flush();
 
@@ -97,7 +98,8 @@ class RecursoController extends Controller
 
         $entity = $em->getRepository('JmbermudoSGR3Bundle:Recurso')->find($id);
 
-        if (!$entity) {
+        //Si la entidad no está activa no podremos editarla
+        if (!$entity || !$entity->getActivo()) {
             throw $this->createNotFoundException('Unable to find Recurso entity.');
         }
 
@@ -118,7 +120,7 @@ class RecursoController extends Controller
 
         $entity = $em->getRepository('JmbermudoSGR3Bundle:Recurso')->find($id);
 
-        if (!$entity) {
+        if (!$entity || !$entity->getActivo()) {
             throw $this->createNotFoundException('Unable to find Recurso entity.');
         }
 
@@ -193,9 +195,12 @@ class RecursoController extends Controller
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('JmbermudoSGR3Bundle:Recurso')->find($id);
 
-            if (!$entity) {
+            if (!$entity || !$entity->getActivo()) {
                 throw $this->createNotFoundException('Unable to find Recurso entity.');
             }
+            
+            //No lo borraremos, sino que lo marcaremos como no activo
+            $entity->setActivo(false);
 
             $em->remove($entity);
             $em->flush();

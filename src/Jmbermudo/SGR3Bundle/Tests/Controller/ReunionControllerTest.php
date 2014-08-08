@@ -3,8 +3,8 @@
 namespace Jmbermudo\SGR3Bundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Jmbermudo\SGR3Bundle\Entity\PreReserva;
+use Jmbermudo\SGR3Bundle\Controller\ReunionController;
 
 class ReunionControllerTest extends WebTestCase
 {
@@ -16,77 +16,129 @@ class ReunionControllerTest extends WebTestCase
         $this->client->followRedirects(true);
     }
     
-    public function testLogin()
+    public function testCreateAction()
+    {
+        $this->doLogin();
+        
+        $fecha = '01/01/2050';
+        $hora_inicio = '10:50';
+        $hora_fin = '11:50';
+        
+        $hora_inicio2 = '10:30';
+        $hora_fin2 = '12:20';
+        
+        $hora_inicio3 = '10:59';
+        $hora_fin3 = '11:30';
+        
+        $recurso = 10; #Id de un recurso válido
+        
+        $crawler = $this->client->request('GET', '/reuniones/13/edit');
+        
+        $form = $crawler->selectButton('Editar')->form(array(
+            'jmbermudo_sgr3bundle_reunion[nombrePublico]' => 'Test nombre público',
+            'jmbermudo_sgr3bundle_reunion[nombrePrivado]' => 'Test nombre privado',
+            'jmbermudo_sgr3bundle_reunion[descripcion]' => 'Test. Descripción'
+        ));
+        
+        //No podemos interactuar con las pre-reservas
+                
+        $this->client->submit($form);
+        
+        $response = $this->client->getResponse();
+        
+        $this->assertGreaterThan(0, $crawler->filter('[value="Test nombre público"]')->count(), 'La reunión no se ha podido editar');
+        
+    }
+    
+    /**
+     * Prueba del solapamiento de pre-reservas.
+     * Crearemos varias condiciones de prueba:
+     *      1. 2 pre-reservas que no se solapan. Debe devolver false
+     *      2. 2 pre-reservas con las mismas horas de inicio y fin. Debe devolver true
+     *      3. Una pre-reserva empieza antes y termina después que la otra. Debe devolver true
+     *      4. Una pre-reserva empieza antes y termina durante la otra. Debe devolver true
+     */
+    public function testTestSolapa()
+    {
+        $controlador = new ReunionController();
+        
+        $pre1 = new PreReserva();
+        $pre2 = new PreReserva();
+        
+        //La fecha será igual para todas
+        $fecha = '2014-10-10 ';
+        
+        //Caso 1
+        $horaInicio1 = new \DateTime($fecha . '01:00:00');
+        $horaFin1 = new \DateTime($fecha . '03:00:00');
+        $horaInicio2 = new \DateTime($fecha . '03:00:00');
+        $horaFin2 = new \DateTime($fecha . '04:00:00');
+        
+        $pre1->setHoraInicio($horaInicio1);
+        $pre1->setHoraFin($horaFin1);
+        $pre2->setHoraInicio($horaInicio2);
+        $pre2->setHoraFin($horaFin2);
+        
+        $res = $controlador->testSolapa($pre1, $pre2);
+        
+        $this->assertFalse($res, 'Las pre-reservas solapan cuando no deberían solapar. Caso 1');
+        
+        //Caso 2
+        $horaInicio1 = new \DateTime($fecha . '01:00:00');
+        $horaFin1 = new \DateTime($fecha . '03:00:00');
+        $horaInicio2 = new \DateTime($fecha . '01:00:00');
+        $horaFin2 = new \DateTime($fecha . '03:00:00');
+        
+        $pre1->setHoraInicio($horaInicio1);
+        $pre1->setHoraFin($horaFin1);
+        $pre2->setHoraInicio($horaInicio2);
+        $pre2->setHoraFin($horaFin2);
+        
+        $res = $controlador->testSolapa($pre1, $pre2);
+        
+        $this->assertTrue($res, 'Las pre-reservas no se solapan cuando sí deberían hacerlo. Caso 2');
+        
+        //Caso 3
+        $horaInicio1 = new \DateTime($fecha . '01:00:00');
+        $horaFin1 = new \DateTime($fecha . '03:00:00');
+        $horaInicio2 = new \DateTime($fecha . '02:00:00');
+        $horaFin2 = new \DateTime($fecha . '02:40:00');
+        
+        $pre1->setHoraInicio($horaInicio1);
+        $pre1->setHoraFin($horaFin1);
+        $pre2->setHoraInicio($horaInicio2);
+        $pre2->setHoraFin($horaFin2);
+        
+        $res = $controlador->testSolapa($pre1, $pre2);
+        
+        $this->assertTrue($res, 'Las pre-reservas no se solapan cuando sí deberían hacerlo. Caso 3');
+        
+        //Caso 4
+        $horaInicio1 = new \DateTime($fecha . '01:00:00');
+        $horaFin1 = new \DateTime($fecha . '03:00:00');
+        $horaInicio2 = new \DateTime($fecha . '02:00:00');
+        $horaFin2 = new \DateTime($fecha . '04:00:00');
+        
+        $pre1->setHoraInicio($horaInicio1);
+        $pre1->setHoraFin($horaFin1);
+        $pre2->setHoraInicio($horaInicio2);
+        $pre2->setHoraFin($horaFin2);
+        
+        $res = $controlador->testSolapa($pre1, $pre2);
+        
+        $this->assertTrue($res, 'Las pre-reservas no se solapan cuando sí deberían hacerlo. Caso 4');
+    }
+    
+    private function doLogin()
     {
         $crawler = $this->client->request('GET', '/login');
+        
         $form = $crawler->selectButton('Entrar')->form(array(
             '_username' => 'jose',
             '_password' => 'amarillo',
         ));
         $this->client->submit($form);
-        
-        $this->assertTrue($this->client->getResponse()->isRedirect('/personal'), "El login salio mal");
-    }
-
-    public function testCreacionReunion()
-    {
-        //$this->doLogin();
-        //$this->client->followRedirects(false);
-        //Cremos el navegador
-        $crawler = $this->client->request('GET', '/');
-        
-        echo $this->client->getResponse();
-        
-        $this->assertTrue($this->client->getResponse()->isRedirect('/login'), "No se pudo completar la peticion de inicio");
-        //$this->assertTrue($crawler->filter('html:contains("Server Configuration")')->count() > 0);
-        
     }
     
     
-    /*
-    public function testCompleteScenario()
-    {
-        // Create a new client to browse the application
-        $client = static::createClient();
-
-        // Create a new entry in the database
-        $crawler = $client->request('GET', '/reunion/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code for GET /reunion/");
-        $crawler = $client->click($crawler->selectLink('Create a new entry')->link());
-
-        // Fill in the form and submit it
-        $form = $crawler->selectButton('Create')->form(array(
-            'jmbermudo_sgr3bundle_reuniontype[field_name]'  => 'Test',
-            // ... other fields to fill
-        ));
-
-        $client->submit($form);
-        $crawler = $client->followRedirect();
-
-        // Check data in the show view
-        $this->assertGreaterThan(0, $crawler->filter('td:contains("Test")')->count(), 'Missing element td:contains("Test")');
-
-        // Edit the entity
-        $crawler = $client->click($crawler->selectLink('Edit')->link());
-
-        $form = $crawler->selectButton('Edit')->form(array(
-            'jmbermudo_sgr3bundle_reuniontype[field_name]'  => 'Foo',
-            // ... other fields to fill
-        ));
-
-        $client->submit($form);
-        $crawler = $client->followRedirect();
-
-        // Check the element contains an attribute with value equals "Foo"
-        $this->assertGreaterThan(0, $crawler->filter('[value="Foo"]')->count(), 'Missing element [value="Foo"]');
-
-        // Delete the entity
-        $client->submit($crawler->selectButton('Delete')->form());
-        $crawler = $client->followRedirect();
-
-        // Check the entity has been delete on the list
-        $this->assertNotRegExp('/Foo/', $client->getResponse()->getContent());
-    }
-
-    */
 }

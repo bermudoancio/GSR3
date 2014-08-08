@@ -585,4 +585,17 @@ class ReunionController extends Controller
                 );            
             $this->get('mailer')->send($message);
     }
+    
+    /**
+     * Este método está aquí a modo de enlace para testear el funcionamiento de
+     * la función solapa, que es privada. 
+     * No es recomendable tenerlo aquí en producción
+     * @param \Jmbermudo\SGR3Bundle\Entity\PreReserva $preReserva
+     * @param \Jmbermudo\SGR3Bundle\Entity\PreReserva $reserva
+     * @return type
+     */
+    public function testSolapa(PreReserva $preReserva, PreReserva $reserva)
+    {
+        return $this->solapa($preReserva, $reserva);
+    }
 }

@@ -13,15 +13,21 @@ JmbermudoSGR3Bundle_reunion:
 JmbermudoSGR3Bundle_prereservas:
     resource: "@JmbermudoSGR3Bundle/Resources/config/routing/prereserva.yml"
     prefix:   /prereservas
+    
+JmbermudoSGR3Bundle_votos:
+    resource: "@JmbermudoSGR3Bundle/Resources/config/routing/voto.yml"
+    prefix:   /votacion
+    
+JmbermudoSGR3Bundle_demonios:
+    resource: "@JmbermudoSGR3Bundle/Resources/config/routing/daemon.yml"
+    prefix:   /daemon
 
 jmbermudo_sgr3_admin_listar_recursos:
     path:   /admin/listarRecursos
     defaults: { _controller: JmbermudoSGR3Bundle:Admin:listarRecursos }
     
+#Página pública principal
 jmbermudo_sgr3_index_public:
     pattern: /
     defaults: { _controller: JmbermudoSGR3Bundle:Public:index }
 
-index:
-    pattern: /index
-    defaults: { _controller: JmbermudoSGR3Bundle:Daemon:index }
