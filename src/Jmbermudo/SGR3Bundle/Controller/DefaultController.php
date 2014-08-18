@@ -20,7 +20,7 @@ class DefaultController extends Controller
         $misReuniones = $usuario->getCreadorDeReuniones();
         
         //Ahora las reuniones a las que me han invitado:
-        $misInvitaciones = $usuario->getReuniones();
+        $misInvitaciones = $usuario->getReunionesPendientes();
         
         return $this->render('JmbermudoSGR3Bundle:Default:index.html.twig', 
                 array(

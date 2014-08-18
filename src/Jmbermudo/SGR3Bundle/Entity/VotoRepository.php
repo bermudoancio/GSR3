@@ -48,4 +48,33 @@ class VotoRepository extends EntityRepository
 //        
         return $reuniones;
     }
+    
+    public function anulaVotoUsuarioReunion($usuario, $reunion)
+    {
+        $res = true; 
+        
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'UPDATE JmbermudoSGR3Bundle:Voto v
+            SET v.valido = 0
+            WHERE v.usuario = :usuario
+            AND v.prereserva in (
+                SELECT p
+                FROM JmbermudoSGR3Bundle:Prereserva p
+                WHERE p.reunion = :reunion
+            )'
+        )
+        ->setParameter('usuario', $usuario->getId())
+        ->setParameter('reunion', $reunion->getId());
+        
+        try {
+            $return = $query->execute();
+        }
+        catch (\Exception $ex) {
+            //La sentencia ha fallado
+            $res = false;
+        }
+        
+        return $res;
+    }
 }

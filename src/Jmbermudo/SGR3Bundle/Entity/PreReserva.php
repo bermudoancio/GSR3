@@ -87,7 +87,7 @@ class PreReserva
     private $aceptada;
     
     /**
-     * @ORM\OneToMany(targetEntity="Voto", mappedBy="preReserva", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Voto", mappedBy="prereserva", cascade={"all"})
      **/
     private $votaciones;
 
@@ -366,5 +366,10 @@ class PreReserva
     public function getVotaciones()
     {
         return $this->votaciones;
+    }
+    
+    public function getNumVotaciones()
+    {
+        return $this->votaciones->count();
     }
 }

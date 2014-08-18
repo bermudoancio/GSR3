@@ -326,4 +326,56 @@ class Reunion
     {
         return $this->prereservas;
     }
+    
+    /**
+     * Devuelve la prereserva que en ese momento sería la ganadora.
+     * Si automático está marcado, devuelve la prereserva más votada que sea reservable
+     * @param boolean $automatico
+     * @return PreReserva La prereserva ganadora o null si no hay ninguna con más votos
+     */
+    public function calculaPreReservaGanadora($automatico = false)
+    {
+        $ganadora = null;
+        $votos = 0;
+        foreach ($this->getPrereservas() as $preReserva) {
+            $num = $preReserva->getVotaciones()->count();
+            
+            if($num > $votos){
+                /*
+                 * Si automático está marcado, sólo será válida aquella prereserva que sea reservable.
+                 */
+                if($automatico && !$preReserva->esReservable()){
+                    //No consideraremos esta reserva como ganadora
+                    continue;
+                }
+                
+                $num = $votos;
+                $ganadora = $preReserva;
+            }
+        }
+        
+        return $ganadora;
+    }
+    
+    /**
+     * Acepta la preReserva cuyo id se pasa por parámetro. Si forzar está activo,
+     * la preReserva se aceptará aunque su responsable no haya aceptado.
+     * @param integer $idPreReserva
+     * @param boolean $forzar
+     * @throws \Exception Si la preReserva no es reservable y no se está forzando
+     */
+    public function aceptarPreReserva($idPreReserva, $forzar)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($idPreReserva);
+        
+        if(!$forzar){
+            if(!$preReserva->esReservable()){
+                throw new \Exception($this->get('translator')->trans('reunion.noAceptableSinForzar'));
+            }
+        }
+        
+        $preReserva->setAceptada(true);
+        $em->flush();
+    }
 }

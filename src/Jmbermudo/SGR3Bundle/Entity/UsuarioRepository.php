@@ -27,4 +27,5 @@ class UsuarioRepository extends EntityRepository
         
         return $reuniones;
     }
+
 }

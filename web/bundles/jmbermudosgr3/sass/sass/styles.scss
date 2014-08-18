@@ -64,3 +64,12 @@ $icon-font-path: "/sgr3/SGR3/web/css/fonts/bootstrap/";
 .bs-callout-warning h4 {
     color: #F0AD4E;
 }
+
+.btn-group .btn-primary {
+    background-color: #AA3333;
+    padding: 1em;
+}
+
+.btn-group .btn-primary.active {
+    background-color: #759E1A;
+}

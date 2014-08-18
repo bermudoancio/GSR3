@@ -1,5 +1,5 @@
-$.ready(function(){
-    $('#form').on('submit', function(){
-        return confirm('?caca?')
+$().ready(function(){
+    $("form[name=form]").on('submit', function(){
+        return confirm(mensajes.ejecutarAccion)
     });
 });

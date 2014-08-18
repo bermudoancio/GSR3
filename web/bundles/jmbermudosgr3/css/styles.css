@@ -7970,3 +7970,14 @@ button.close {
 .bs-callout-warning h4 {
   color: #F0AD4E;
 }
+
+/* line 68, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.btn-group .btn-primary {
+  background-color: #AA3333;
+  padding: 1em;
+}
+
+/* line 73, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.btn-group .btn-primary.active {
+  background-color: #759E1A;
+}

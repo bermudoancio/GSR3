@@ -54,6 +54,14 @@
                 <source>global.acciones</source>
                 <target>Acciones</target>
             </trans-unit>
+            <trans-unit id="14">
+                <source>global.errorBD</source>
+                <target>Ha ocurrido un error de base de datos. Por favor, contacte con el administrador de la página</target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>global.detalles</source>
+                <target>Detalles</target>
+            </trans-unit>
             <trans-unit id="300">
                 <source>admin.recursos</source>
                 <target>Recursos</target>
@@ -272,6 +280,34 @@
                 <source>reunion.aceptacion_auto_invitado</source>
                 <target>La reunión %reunion% se ha ACEPTADO automáticamente</target>
             </trans-unit>
+            <trans-unit id="545">
+                <source>reunion.notFound</source>
+                <target>La reunión buscada no se ha encontrado</target>
+            </trans-unit>
+            <trans-unit id="545">
+                <source>reunion.anulada</source>
+                <target>La reunión ha sido anulada</target>
+            </trans-unit>
+            <trans-unit id="545">
+                <source>reunion.fechaExpirada</source>
+                <target>No puede votar para esta reunión porque ya ha expirado el plazo de voto</target>
+            </trans-unit>
+            <trans-unit id="546">
+                <source>reunion.noAceptableSinForzar</source>
+                <target>Esta Pre-Reserva no se puede aceptar porque el responsable del recurso no ha respondido todavía, o ha respondido negativamente. Aún puede forzar la aceptación marcando la casilla de forzar</target>
+            </trans-unit>
+            <trans-unit id="547">
+                <source>reunion.nombrePublico</source>
+                <target>Nombre público</target>
+            </trans-unit>
+            <trans-unit id="548">
+                <source>reunion.nombrePrivado</source>
+                <target>Nombre privado</target>
+            </trans-unit>
+            <trans-unit id="549">
+                <source>reunion.descripcion</source>
+                <target>Descripción</target>
+            </trans-unit>
             <trans-unit id="550">
                 <source>preReserva.fecha</source>
                 <target>Fecha</target>
@@ -288,9 +324,29 @@
                 <source>preReserva.previamenteRechazada</source>
                 <target>¡Atención! Esta autorización ya había sido RECHAZADA anteriormente</target>
             </trans-unit>
-            <trans-unit id="5554">
+            <trans-unit id="554">
                 <source>reunion.modificacion_invitado</source>
                 <target>Se ha modificado una reunión a la que estabas invitado</target>
+            </trans-unit>
+            <trans-unit id="555">
+                <source>reunion.invitados</source>
+                <target>Invitados</target>
+            </trans-unit>
+            <trans-unit id="556">
+                <source>reunion.InvitadoApellidos</source>
+                <target>Apellidos</target>
+            </trans-unit>
+            <trans-unit id="557">
+                <source>reunion.InvitadoNombre</source>
+                <target>Nombre</target>
+            </trans-unit>
+            <trans-unit id="558">
+                <source>reunion.fechas</source>
+                <target>Fechas propuestas</target>
+            </trans-unit>
+            <trans-unit id="559">
+                <source>preReserva.porcentajeVotos</source>
+                <target>Porcentaje de votación</target>
             </trans-unit>
             <trans-unit id="1000">
                 <source>voto.votacion</source>
@@ -307,6 +363,10 @@
             <trans-unit id="1003">
                 <source>voto.votar</source>
                 <target>Votar</target>
+            </trans-unit>
+            <trans-unit id="1004">
+                <source>voto.votacionOK</source>
+                <target>Tu votación ha sido registrada correctamente</target>
             </trans-unit>
             
         </body>

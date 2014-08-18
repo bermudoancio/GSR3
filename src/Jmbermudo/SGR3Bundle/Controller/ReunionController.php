@@ -202,7 +202,7 @@ class ReunionController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->render('JmbermudoSGR3Bundle:Reunion:show.html.twig', array(
-            'entity'      => $entity,
+            'reunion'      => $entity,
             'delete_form' => $deleteForm->createView(),        ));
     }
 

@@ -11,18 +11,13 @@ class VotoController extends Controller
     
     public function showAction(Request $request, $id)
     {
-        //Vamos a ver si el usuario estÃ¡ invitado a la reuniÃ³n
         $em = $this->getDoctrine()->getManager();
         
-        $reunion = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->find($id);
-        $invitados = $reunion->getInvitados();
+        //Vamos a llamar a un método que comprobará si el usuario puede o no puede
+        //votar para esta reunión
+        $reunion = $this->usuarioPuedeVotar($id, $em);
         
         $usuario = $this->getUser();
-        
-        //Si el usuario no estÃ¡ invitado, no puede participar
-        if(!$invitados->contains($usuario)){
-            throw new AccessDeniedException($this->get('translator')->trans('voto.no_invitado'));
-        }
         
         $votos = $em->getRepository('JmbermudoSGR3Bundle:Voto')->getVotosUsuario($usuario, $reunion);
         
@@ -30,6 +25,7 @@ class VotoController extends Controller
         
         return $this->render('JmbermudoSGR3Bundle:Voto:votacion.html.twig', array(
             'reunion'=> $reunion,
+            'votos' => $votos,
             'form'   => $formulario->createView(),
         ));
     }
@@ -40,21 +36,17 @@ class VotoController extends Controller
      */
     public function votacionAction(Request $request)
     {
-        //Lo primero será ver para qué reunión está votando. El parámetro viene oculto
-        $params = $this->getRequest()->request->all();
-        $reunion_id = $params['form']['reunion'];
-        
         $em = $this->getDoctrine()->getManager();
         
-        $reunion = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->find($reunion_id);
-        $invitados = $reunion->getInvitados();
+        //Lo primero será ver para qué reunión está votando. El parámetro viene oculto
+        $params = $request->request->all();
+        $reunion_id = $params['form']['reunion'];
+        
+        //Vamos a llamar a un método que comprobará si el usuario puede o no puede
+        //votar para esta reunión
+        $reunion = $this->usuarioPuedeVotar($reunion_id, $em);
         
         $usuario = $this->getUser();
-        
-        //Si el usuario no estÃ¡ invitado, no puede participar
-        if(!$invitados->contains($usuario)){
-            throw new AccessDeniedException($this->get('translator')->trans('voto.no_invitado'));
-        }
         
         $votos = $em->getRepository('JmbermudoSGR3Bundle:Voto')->getVotosUsuario($usuario, $reunion);
         
@@ -63,10 +55,15 @@ class VotoController extends Controller
         $formulario->handleRequest($request);
         
         if ($formulario->isValid()) {
-            //Recogemos todos los votos
-            $parametros = $request->request->all();
+            
             //Primero anulamos los votos anteriores
-            $usuario->anulaVotosReunion($reunion_id);
+            $res = $em->getRepository('JmbermudoSGR3Bundle:Voto')->anulaVotoUsuarioReunion($usuario, $reunion);
+            
+            //Si la anulación de los votos falla, terminamos
+            if(!$res){
+                //error 500 
+                throw new \Exception($this->get('translator')->trans('global.errorBD'));
+            }
             
             //Y ahora guardamos los nuevos
             foreach($reunion->getPrereservas() as $preReserva){
@@ -76,7 +73,9 @@ class VotoController extends Controller
                 $voto->setPrereserva($preReserva);
                 $voto->setUsuario($usuario);
                 $voto->setValido(true);
-                if (in_array('voto_' . $preReserva->getId() . '_' . $this->getUser()->getId())){
+                
+                $id_voto = 'voto_' . $preReserva->getId() . '_' . $this->getUser()->getId();
+                if (array_key_exists($id_voto, $params['form'])){
                     $voto->setAcepta(true);
                 }
                 else{
@@ -88,13 +87,15 @@ class VotoController extends Controller
             }
             //Y guardamos en la base de datos
             $em->flush();
+            
+            // add flash messages
+            $request->getSession()->getFlashBag()->add(
+                    'success', $this->get('translator')->trans('voto.votacionOK')
+            );
         }
         
         //El formulario no es válido
-        return $this->render('JmbermudoSGR3Bundle:Voto:votacion.html.twig', array(
-            'reunion'=> $reunion,
-            'form'   => $formulario->createView(),
-        ));
+        return $this->redirect($this->generateUrl('jmbermudo_sgr3_homepage'));
     }
     
     private function generaFormulario(Request $request, $reunion, $votos)
@@ -166,6 +167,61 @@ class VotoController extends Controller
                     );
         
         return $formatterFecha->format($fecha);
+    }
+    
+    /**
+     * Determina si un usuario puede votar en una reunión. tiene en cuenta los
+     * siguientes factores:
+     *      - Está invitado
+     *      - La reunión es válida
+     *      - La fecha de votación todavía está activa
+     * @param type $request
+     * @param type $reunion
+     * 
+     * @return Reunion El objeto reunión si no se ha producido ningún problema
+     * para que el usuario pueda votar
+     */
+    private function usuarioPuedeVotar($reunion_id, $em)
+    {
+        $reunion = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->find($reunion_id);
+        
+        if(!$reunion){
+            $this->createNotFoundException($this->get('translator')->trans('reunion.notFound'));
+        }
+        
+        //Vamos a ver si la reunión se ha cancelado
+        if ($reunion->getAnulada())
+        {
+            throw new \Exception($this->get('translator')->trans('reunion.anulada'));
+        }
+        
+        $invitados = $reunion->getInvitados();
+        
+        $usuario = $this->getUser();
+        
+        //Si el usuario no está invitado, no puede participar
+        if(!$invitados->contains($usuario)){
+            throw new AccessDeniedException($this->get('translator')->trans('voto.no_invitado'));
+        }
+        
+        //Vamos a calcular cuándo era la fecha máxima para votar de la reunión
+        $fecha_actual = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+        
+        $fecha_max_reunion = $reunion->getFechaCreacion();
+        //Añadimos el número de días que el usuario tenía para votar
+        $fecha_max_reunion->add(new \DateInterval('P' . $this->container->getParameter('duracion_reunion') . 'D'));
+        
+        //Si la reunión ya ha pasado su fecha máxima de voto, no puede votar
+        //Sólo tendremos en cuenta el día, no la hora
+        $fecha_actual_dia = $fecha_actual->format('Y-m-d');
+        $fecha_max_reunion_dia = $fecha_max_reunion->format('Y-m-d');
+        
+        if($fecha_actual_dia > $fecha_max_reunion_dia){
+            throw new \Exception($this->get('translator')->trans('reunion.fechaExpirada'));
+        }
+        
+        //Si todo lo anterior pasa sin lanzar excepciones, el usuario puede votar
+        return $reunion;
     }
 
 }

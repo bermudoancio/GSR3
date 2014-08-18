@@ -20,23 +20,14 @@ class ReunionControllerTest extends WebTestCase
     {
         $this->doLogin();
         
-        $fecha = '01/01/2050';
-        $hora_inicio = '10:50';
-        $hora_fin = '11:50';
-        
-        $hora_inicio2 = '10:30';
-        $hora_fin2 = '12:20';
-        
-        $hora_inicio3 = '10:59';
-        $hora_fin3 = '11:30';
-        
-        $recurso = 10; #Id de un recurso válido
+        //Introducimos un componente aleatorio para comprobar que la prueba es 100% efectiva
+        $randComponent = rand(0, 1000);
         
         $crawler = $this->client->request('GET', '/reuniones/13/edit');
         
         $form = $crawler->selectButton('Editar')->form(array(
-            'jmbermudo_sgr3bundle_reunion[nombrePublico]' => 'Test nombre público',
-            'jmbermudo_sgr3bundle_reunion[nombrePrivado]' => 'Test nombre privado',
+            'jmbermudo_sgr3bundle_reunion[nombrePublico]' => "Test nombre público $randComponent",
+            'jmbermudo_sgr3bundle_reunion[nombrePrivado]' => "Test nombre privado $randComponent",
             'jmbermudo_sgr3bundle_reunion[descripcion]' => 'Test. Descripción'
         ));
         
@@ -46,7 +37,7 @@ class ReunionControllerTest extends WebTestCase
         
         $response = $this->client->getResponse();
         
-        $this->assertGreaterThan(0, $crawler->filter('[value="Test nombre público"]')->count(), 'La reunión no se ha podido editar');
+        $this->assertGreaterThan(0, $crawler->filter('[value="Test nombre público ' . $randComponent . '"]')->count(), 'La reunión no se ha podido editar');
         
     }
     

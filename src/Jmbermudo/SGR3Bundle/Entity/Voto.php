@@ -45,7 +45,7 @@ class Voto
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="PreReserva", inversedBy="votaciones")
+     * @ORM\ManyToOne(targetEntity="Prereserva", inversedBy="votaciones")
      * @ORM\JoinColumn(referencedColumnName="id")
      */
     private $prereserva;

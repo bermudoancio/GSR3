@@ -183,9 +183,17 @@ class Usuario extends BaseUser
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getCreadorDeReuniones()
+    public function getCreadorDeReuniones($all = false)
     {
-        return $this->creador_de_reuniones;
+        $creador = $this->creador_de_reuniones;
+        
+        $criteria = Criteria::create();
+        
+        if(!$all){
+            $criteria->where(Criteria::expr()->eq("anulada", "0"));
+        }
+
+        return $creador->matching($criteria);
     }
 
     /**
@@ -221,22 +229,28 @@ class Usuario extends BaseUser
         return $this->reuniones;
     }
     
-    /**
-     * //@TODO: Esta función devuelve un array con las reuniones que el usuario tiene
-     * pendientes, es decir, cuya fecha seleccionada de reunión no ha pasado; o
-     * aquellas que todavía están en periodo de votación
-     * @return array
-     */
+    
     public function getReunionesPendientes()
     {
         $reuniones = $this->getReuniones();
+        
+        $reunionesPendientes = new \Doctrine\Common\Collections\ArrayCollection();
 
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("anulada", "0"))
-            ->andWhere(Criteria::expr()->eq("fechaCreacion", "0"))
-        ;
-
-        $reunionesPendientes = $reuniones->matching($criteria);
+        /*
+         * No usar. Esta función no funciona porque Symfony no permite aún aplicar criterios
+         * de filtrado a colecciones Many to Many
+         */
+//        $criteria = Criteria::create()
+//            ->where(Criteria::expr()->eq("anulada", "0"))
+//        ;
+//
+//        $reunionesPendientes = $reuniones->matching($criteria);
+        
+        foreach($reuniones as $reunion){
+            if (!$reunion->getAnulada()){
+                $reunionesPendientes->add($reunion);
+            }
+        }
         
         return $reunionesPendientes;
     }
