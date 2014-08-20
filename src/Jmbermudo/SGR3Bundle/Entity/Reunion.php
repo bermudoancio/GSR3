@@ -278,7 +278,7 @@ class Reunion
      * o NULL en caso contrario. Aún habrá que comprobar que la pre-reserva es
      * reservable, es decir, si el responsable (si lo hubiera), ha aceptado
      */
-    public function getReservaAceptada()
+    public function getPrereservaAceptada()
     {
         $aceptada = null;
         
@@ -366,16 +366,69 @@ class Reunion
      */
     public function aceptarPreReserva($idPreReserva, $forzar)
     {
-        $em = $this->getDoctrine()->getManager();
-        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($idPreReserva);
+//        $em = $this->getDoctrine()->getManager();
+//        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($idPreReserva);
+//        
+//        if(!$forzar){
+//            if(!$preReserva->esReservable()){
+//                throw new \Exception($this->get('translator')->trans('reunion.noAceptableSinForzar'));
+//            }
+//        }
+//        
+//        $preReserva->setAceptada(true);
+//        $em->flush();
+        foreach ($this->getPrereservas() as $prereserva) {
+            if($prereserva->getId() != $idPreReserva){
+                $prereserva->setAceptada(false);
+                $prereserva->setAnulada(true);
+            }
+            else{
+                //forzamos aunque no sea reservable, pues este método se llama
+                //de manera manual
+                if (!$forzar) {
+                    if (!$preReserva->esReservable()) {
+                        throw new \Exception($this->get('translator')->trans('reunion.noAceptableSinForzar'));
+                    }
+                }
+                else{
+                    /*
+                     * Todavía hay un último punto a comprobar. Si la pre-reserva
+                     * ya ha expirado, no se podrá reservar aunque se fuerce
+                     */
+                    if($preReserva->haExpirado()){
+                        throw new \Exception($this->get('translator')->trans('reunion.noAceptableExpiro'));
+                    }
+                }
+                $prereserva->setAceptada(true);
+                $prereserva->setAnulada(false);
+            }
+        }
+    }
+    
+    /**
+     * Esta función devolverá si la reunión se puede editar o no
+     */
+    public function editable()
+    {
+        $editable = true;
+        /*
+         * Para saber si una reunión es editable, miraremos si tenía alguna pre-reserva
+         * aceptada y la fecha de esta ya pasó. Si es así, la reunión no se podrá
+         * editar
+         */
+        $prereserva = $this->getPrereservaAceptada();
         
-        if(!$forzar){
-            if(!$preReserva->esReservable()){
-                throw new \Exception($this->get('translator')->trans('reunion.noAceptableSinForzar'));
+        if($prereserva){
+            $fechaAhora = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+            
+            $fecha = $prereserva->getFecha();
+            $fecha->setTime($prereserva->getHoraInicio()->format("H"), $prereserva->getHoraInicio()->format("i"), 0);
+            
+            if ($fechaAhora >= $fecha){
+                $editable = false;
             }
         }
         
-        $preReserva->setAceptada(true);
-        $em->flush();
+        return $editable;
     }
 }

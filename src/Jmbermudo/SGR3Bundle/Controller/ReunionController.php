@@ -228,6 +228,11 @@ class ReunionController extends Controller
                 && $this->getUser() !== $entity->getCreador()) {
             throw new AccessDeniedException();
         }
+        
+        //Vamos a ver si la reunión es editable
+        if(!$entity->editable()){
+            throw new \Exception($this->get('translator')->trans('reunion.no_editable'));
+        }
 
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
@@ -279,12 +284,33 @@ class ReunionController extends Controller
                 && $this->getUser() !== $entity->getCreador()) {
             throw new AccessDeniedException();
         }
+        
+        //Vamos a ver si la reunión es editable
+        if(!$entity->editable()){
+            throw new \Exception($this->get('translator')->trans('reunion.no_editable'));
+        }
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
+        
+        /*
+         * Vamos a comprobar si las pre-reservas son válidas
+         */
+        $preReservas = $entity->getPrereservas();
+        $mensajes_error = $this->checkPreReservas($request, $preReservas);
+        
+        if(count($mensajes_error) > 0){
+            foreach ($mensajes_error as $mensaje) {
+                //El mensaje ya está traducido aquí
+                $editForm->addError(new FormError($mensaje));
+            }
+        }
 
         if ($editForm->isValid()) {
+            //Si se edita, vamos a cancelar posibles anulaciones anteriores
+            $entity->setAnulada(false);
+            
             $em->flush();
             
             //Por último, avisamos de la modificación
@@ -365,6 +391,75 @@ class ReunionController extends Controller
     }
     
     /**
+     * Esta función aceptará una prereserva, avisando además tanto al creador 
+     * como a los invitados.
+     * @param type $idPreReserva
+     */
+    public function aceptarPreReservaAction(Request $request, $idPreReserva)
+    {
+        /*
+         * Lo primero será comprobar permisos. Tiene que ser el creador de la reunión
+         * o administrador para poder realizar esta acción.
+         */
+        $this->puedeAceptarPrereserva($idPreReserva);
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $prereserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($idPreReserva);
+
+        //obtenemos la reunión
+        $reunion = $prereserva->getReunion();
+
+
+        /*
+         * Ya hemos comprobado que el usuario tiene acceso. Ahora, vamos a crear
+         * la lógica de aceptación.
+         * 
+         * Para ello, vamos a "cancelar" (poner aceptada a false) las demás pre-reservas
+         * y aceptaremos esta
+         */
+
+        $reunion->aceptarPreReserva($prereserva->getId(), true);
+
+        $em->flush();
+        
+        //Por último, avisamos de la aceptación
+        $this->avisaAceptacion($reunion, $request);
+        
+        //Todo ok, redirigimos
+        return $this->redirect($this->generateUrl('reunion_show', array('id' => $reunion->getId())));
+    }
+    
+    /**
+     * Define si un usuario puede o no aceptar una prereserva. Podrá hacerlo en el
+     * caso de ser el creador, o ser administrador. 
+     * @param type $idPreReserva
+     * @throws createNotFoundException
+     * @throws AccessDeniedException
+     */
+    private function puedeAceptarPrereserva($idPreReserva)
+    {
+        /*
+         * Lo primero será comprobar permisos. Tiene que ser el creador de la reunión
+         * o administrador para poder realizar esta acción.
+         */
+        $em = $this->getDoctrine()->getManager();
+
+        $prereserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($idPreReserva);
+
+        if (!$prereserva) {
+            throw $this->createNotFoundException('No se encuentra la reunión solicitada');
+        }
+
+        //obtenemos la reunión
+        $reunion = $prereserva->getReunion();
+
+        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $this->getUser() !== $reunion->getCreador()) {
+            throw new AccessDeniedException();
+        }
+    }
+    
+    /**
      * Esta función comprobará si las prereservas de una reunión son válidas.
      * Para ello, comprobaremos una a una si existe alguna imposibilidad de realizar
      * las prereservas con otras ya existentes.
@@ -381,9 +476,13 @@ class ReunionController extends Controller
         foreach ($preReservas as $preReserva) {
            /*
             * Ahora vamos a hacer dos comprobaciones básicas:
-            *  1: La fecha es posterior o igual al día de hoy
-            *  2: La hora de fin es posterior a la hora de inicio
+            *  1: La pre-reserva con la que se compara es de otra reunión
+            *  2: La fecha es posterior o igual al día de hoy
+            *  3: La hora de fin es posterior a la hora de inicio
             */
+            
+            $reunion = $preReserva->getReunion();
+            
             $fechaInicioConHoraInicio = $preReserva->getFecha();
             //Lo que hacemos es ponerle la hora inicio a la fecha para comparar
             $fechaInicioConHoraInicio->setTime($preReserva->getHoraInicio()->format('H'), $preReserva->getHoraInicio()->format('i'));
@@ -404,6 +503,15 @@ class ReunionController extends Controller
              * y las prereservas las que se están intentando efectuar ahora
              */
             foreach($reservas as $reserva) {
+                /*
+                 * Por cada pre-reserva, vamos a comprobar si se refiere a una 
+                 * de la misma reunión o no, pues si es de la misma no la tendremos
+                 * en cuenta, ya que no se podrán aceptar las 2 a la vez.
+                 */
+                if($reserva->getReunion() === $reunion){
+                    continue;
+                }
+                
                 if($this->solapa($preReserva, $reserva)){
                     //Formateemos las fechas antes de mostrarlas
                     $formatterFecha = \IntlDateFormatter::create(
@@ -489,7 +597,7 @@ class ReunionController extends Controller
                     'nombre' => $entity->getNombrePublico(),
                     'invitado' => $invitado->getNombre(),
                     'creador' => $entity->getCreador(),
-                    'enlace' => ''
+                    'enlace' => $this->generateUrl('voto_show', array('voto' => $entity->getPrereservaAceptada()->getId()))
                 )
             );
         }
@@ -549,6 +657,32 @@ class ReunionController extends Controller
         }
     }
     
+    private function avisaAceptacion(Reunion $entity, Request $request)
+    {
+        //Avisamos por email al creador
+        $this->sendMail(
+                $this->get('translator')->trans('reunion.aceptada_ok'),
+                $entity->getCreador()->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_aceptacion_creador_' . $request->getLocale() . '.txt.twig', 
+                array(
+                    'reunion' => $entity,
+                )
+            );
+
+        //Y a todos los participantes
+        foreach ($entity->getInvitados() as $invitado) {
+            $this->sendMail(
+                $this->get('translator')->trans('reunion.invitado_aceptada_ok'),
+                $invitado->getEmail(), 
+                'JmbermudoSGR3Bundle:Reunion:email/email_aceptacion_invitado_' . $request->getLocale() . '.txt.twig', 
+                array(
+                    'invitado' => $invitado->getNombre(),
+                    'reunion' => $entity
+                )
+            );
+        }
+    }
+    
     private function avisaResponsable(PreReserva $entity, Request $request)
     {
         //Avisamos por email al creador
@@ -559,7 +693,7 @@ class ReunionController extends Controller
                 array(
                     'responsable' => $entity->getRecurso()->getResponsable()->getNombre(),
                     'preReserva' => $entity,
-                    'enlace' => ''
+                    'enlace' => $this->generateUrl('prereserva_respuesta_responsable_show', array('id' => $entity->getId()))
                 )
             );
     }
@@ -585,6 +719,7 @@ class ReunionController extends Controller
                 );            
             $this->get('mailer')->send($message);
     }
+    
     
     /**
      * Este método está aquí a modo de enlace para testear el funcionamiento de

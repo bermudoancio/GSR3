@@ -348,6 +348,22 @@
                 <source>preReserva.porcentajeVotos</source>
                 <target>Porcentaje de votación</target>
             </trans-unit>
+            <trans-unit id="560">
+                <source>preReserva.votaciones</source>
+                <target>votaciones</target>
+            </trans-unit>
+            <trans-unit id="561">
+                <source>preReserva.forzarAceptar</source>
+                <target>Aceptar (forzar)</target>
+            </trans-unit>            
+            <trans-unit id="562">
+                <source>reunion.noEditable</source>
+                <target>Esta reunión no se puede editar</target>
+            </trans-unit>            
+            <trans-unit id="563">
+                <source>reunion.noAceptableExpiro</source>
+                <target>Esta prereserva no se puede aceptar porque ya ha expirado</target>
+            </trans-unit>            
             <trans-unit id="1000">
                 <source>voto.votacion</source>
                 <target>Votación</target>

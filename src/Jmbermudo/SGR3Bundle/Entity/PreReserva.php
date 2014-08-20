@@ -295,6 +295,9 @@ class PreReserva
     {
         $reservable = true;
         
+        //Si ha expirado tampoco se podrá reservar
+        $reservable &= !$this->haExpirado();
+        
         //Si tiene responsable, vemos si ha aceptado
         if($this->getRecurso()->getResponsable() !== null){
             if(!$this->responsableResponde || ($this->responsableResponde && !$this->responsableAcepta)){
@@ -303,6 +306,22 @@ class PreReserva
         }
         
         return $reservable;
+    }
+    
+    public function haExpirado(){
+        $expira = false;
+        
+        //Antes de nada, comprobaremos que la fecha no haya pasado ya
+        $fechaAhora = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+            
+        $fecha = $this->getFecha();
+        $fecha->setTime($this->getHoraInicio()->format("H"), $this->getHoraInicio()->format("i"), 0);
+
+        if ($fechaAhora >= $fecha){
+            $expira = true;
+        }
+        
+        return $expira;
     }
 
     /**

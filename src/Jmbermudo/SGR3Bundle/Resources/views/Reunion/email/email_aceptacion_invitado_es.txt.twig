@@ -1,0 +1,11 @@
+Hola {{ invitado }},
+
+la reunión con nombre {{ reunion.nombrePublico }} ha sido aceptada.
+
+La fecha fijada para la Reunión queda finalmente:
+
+Fecha: {{ reunion.prereservaAceptada.fecha | localizeddate('medium', 'none', app.request.locale ) }}
+Hora: {{ reunion.prereservaAceptada.horaInicio | localizeddate('none', 'medium', app.request.locale ) }} - {{ reunion.prereservaAceptada.horaFin | localizeddate('none', 'medium', app.request.locale ) }}
+Lugar: {{ reunion.prereservaAceptada.recurso }}
+
+Gracias por asistir. Un cordial saludo.

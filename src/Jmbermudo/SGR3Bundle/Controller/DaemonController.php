@@ -100,14 +100,14 @@ class DaemonController extends Controller
         $reuniones = $em->getRepository('JmbermudoSGR3Bundle:Reunion')->getReunionesExpiranEn($fecha_max);
         
         foreach ($reuniones as $reunion) {
-            $preReservas = $reunion->getPrereservas();
-            
-            //TODO: comprobar cuál es la pre-reserva que hay que aceptar.
-            
+            //llamamos al método que calcula la pre-reserva ganadora en modo automático
+            $preReserva = $reunion->calculaPreReservaGanadora(true);
+            $reunion->aceptarPreReserva($preReserva->getId());
+                        
             $em->flush();
             
             //Y avisamos al creador y a los participantes
-            //$this->avisaAceptacionAutomatica($reunion, $request);
+            $this->avisaAceptacionAutomatica($reunion, $request);
             
             //Añadimos una línea de log
             $mensaje = $this->get('translator')->trans('reunion.aceptacion_auto_ok',
@@ -199,7 +199,7 @@ class DaemonController extends Controller
     
     private function avisaAceptacionAutomatica(Reunion $entity, Request $request)
     {
-        $preReservaAceptada = $entity->getReservaAceptada();
+        $preReservaAceptada = $entity->getPrereservaAceptada();
         //Avisamos por email al creador
         $this->sendMail(
                 $this->get('translator')->trans('reunion.aceptacion_auto_ok',

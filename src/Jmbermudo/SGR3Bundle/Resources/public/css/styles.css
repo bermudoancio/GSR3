@@ -7985,5 +7985,5 @@ button.close {
 /* line 77, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
 .panel-body .row {
   margin-left: 0 !important;
-  margin-right: 0;
+  margin-right: 0 !important;
 }

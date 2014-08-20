@@ -114,15 +114,19 @@
                                     {% set votos = prereserva.votaciones|length %}
                                     {% set porcentajeVoto = votos / numInvitados * 100 %}
                                     <tr class="odd">
-                                        <td>{{ prereserva.fecha | localizeddate('medium', 'none', app.request.locale ) }} => {{ prereserva.horaInicio | localizeddate('none', 'medium', app.request.locale ) }} - {{ prereserva.horaFin | localizeddate('none', 'medium', app.request.locale ) }}</td>
+                                        <td>
+                                            {{ prereserva.fecha | localizeddate('medium', 'none', app.request.locale ) }} => {{ prereserva.horaInicio | localizeddate('none', 'medium', app.request.locale ) }} - {{ prereserva.horaFin | localizeddate('none', 'medium', app.request.locale ) }}
+                                            <br/>
+                                            {{ prereserva.recurso }}
+                                        </td>
                                         <td>
                                             <div class="progress progress-striped active">
                                                 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ porcentajeVoto }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ porcentajeVoto }}%">
-                                                    <span class="sr-only">{{ porcentajeVoto }}% votaciones</span>
+                                                    <span class="sr-only">{{ porcentajeVoto }}% {% trans %}preReserva.votaciones{% endtrans %}</span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>botones</td>
+                                        <td><a href="{{ path('reunion_aceptar_prereserva_action', {'idPreReserva': prereserva.id}) }}"><span class="label label-warning">{% trans %}preReserva.forzarAceptar{% endtrans %}</span></a></td>
                                     </tr>
                                     {% endfor %}
 
@@ -140,10 +144,9 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
-        
     
-        <a href="{{ path('reunion_edit', { 'id': reunion.id }) }}">
-            Edit
-        </a>
+        {% if reunion.editable %}
+            <a href="{{ path('reunion_index') }}" class="btn btn-info add_link"><i class="glyphicon glyphicon-plus-sign"></i> {% trans %}global.editar{% endtrans %}</a>
+        {% endif %}
     
 {% endblock %}

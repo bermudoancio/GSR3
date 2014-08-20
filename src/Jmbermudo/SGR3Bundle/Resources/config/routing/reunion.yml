@@ -28,3 +28,12 @@ reunion_delete:
     pattern:  /{id}/delete
     defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:delete" }
     requirements: { _method: post|delete }
+    
+reunion_aceptar_prereserva:
+    pattern:  /aceptar_prereserva/{idPreReserva}
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:aceptarPreReservaShow" }
+    
+reunion_aceptar_prereserva_action:
+    pattern:  /aceptar_prereserva/{idPreReserva}/confirmar
+    defaults: { _controller: "JmbermudoSGR3Bundle:Reunion:aceptarPreReserva" }
+    #requirements: { _method: post }
