@@ -102,7 +102,13 @@ class DaemonController extends Controller
         foreach ($reuniones as $reunion) {
             //llamamos al método que calcula la pre-reserva ganadora en modo automático
             $preReserva = $reunion->calculaPreReservaGanadora(true);
-            $reunion->aceptarPreReserva($preReserva->getId());
+            try{
+                $reunion->aceptarPreReserva($preReserva->getId());
+            }
+            catch (\Exception $e){
+                $this->mensajes[] = $e->getMessage();
+                continue;
+            }
                         
             $em->flush();
             

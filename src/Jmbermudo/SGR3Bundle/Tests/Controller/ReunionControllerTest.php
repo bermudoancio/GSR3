@@ -13,7 +13,7 @@ class ReunionControllerTest extends WebTestCase
     public function setUp()
     {
         $this->client = static::createClient(array(), array('DOCUMENT_ROOT' => '/', 'HTTP_HOST' => 'www.mysgr3.com'));
-        $this->client->followRedirects(true);
+        //$this->client->followRedirects(true);
     }
     
     public function testCreateAction()
@@ -34,8 +34,8 @@ class ReunionControllerTest extends WebTestCase
         //No podemos interactuar con las pre-reservas
                 
         $this->client->submit($form);
-        
-        $response = $this->client->getResponse();
+        $crawler = $this->client->followRedirect();
+        //$response = $this->client->getResponse();
         
         $this->assertGreaterThan(0, $crawler->filter('[value="Test nombre público ' . $randComponent . '"]')->count(), 'La reunión no se ha podido editar');
         

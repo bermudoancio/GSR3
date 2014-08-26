@@ -312,7 +312,7 @@ class PreReserva
         $expira = false;
         
         //Antes de nada, comprobaremos que la fecha no haya pasado ya
-        $fechaAhora = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+        $fechaAhora = new \DateTime('');
             
         $fecha = $this->getFecha();
         $fecha->setTime($this->getHoraInicio()->format("H"), $this->getHoraInicio()->format("i"), 0);

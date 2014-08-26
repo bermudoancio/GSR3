@@ -364,6 +364,22 @@
                 <source>reunion.noAceptableExpiro</source>
                 <target>Esta prereserva no se puede aceptar porque ya ha expirado</target>
             </trans-unit>            
+            <trans-unit id="564">
+                <source>preReserva.aceptada</source>
+                <target>Aceptada</target>
+            </trans-unit>
+            <trans-unit id="565">
+                <source>reunion.aceptada_ok</source>
+                <target>La reunión ha sido confirmada</target>
+            </trans-unit>
+            <trans-unit id="566">
+                <source>reunion.invitado_aceptada_ok</source>
+                <target>Se ha confirmado una reunión a la que estás invitado</target>
+            </trans-unit>            
+            <trans-unit id="567">
+                <source>reunion.no_editable</source>
+                <target>La reunión que intenta editar ya no es editable</target>
+            </trans-unit>            
             <trans-unit id="1000">
                 <source>voto.votacion</source>
                 <target>Votación</target>

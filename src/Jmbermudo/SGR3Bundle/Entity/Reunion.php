@@ -366,36 +366,26 @@ class Reunion
      */
     public function aceptarPreReserva($idPreReserva, $forzar)
     {
-//        $em = $this->getDoctrine()->getManager();
-//        $preReserva = $em->getRepository('JmbermudoSGR3Bundle:PreReserva')->find($idPreReserva);
-//        
-//        if(!$forzar){
-//            if(!$preReserva->esReservable()){
-//                throw new \Exception($this->get('translator')->trans('reunion.noAceptableSinForzar'));
-//            }
-//        }
-//        
-//        $preReserva->setAceptada(true);
-//        $em->flush();
+
         foreach ($this->getPrereservas() as $prereserva) {
             if($prereserva->getId() != $idPreReserva){
                 $prereserva->setAceptada(false);
                 $prereserva->setAnulada(true);
             }
             else{
-                //forzamos aunque no sea reservable, pues este método se llama
-                //de manera manual
                 if (!$forzar) {
-                    if (!$preReserva->esReservable()) {
+                    if (!$prereserva->esReservable()) {
                         throw new \Exception($this->get('translator')->trans('reunion.noAceptableSinForzar'));
                     }
                 }
                 else{
+                    //forzamos aunque no sea reservable, pues este método se llama
+                    //de manera manual
                     /*
                      * Todavía hay un último punto a comprobar. Si la pre-reserva
                      * ya ha expirado, no se podrá reservar aunque se fuerce
                      */
-                    if($preReserva->haExpirado()){
+                    if($prereserva->haExpirado()){
                         throw new \Exception($this->get('translator')->trans('reunion.noAceptableExpiro'));
                     }
                 }
@@ -419,7 +409,7 @@ class Reunion
         $prereserva = $this->getPrereservaAceptada();
         
         if($prereserva){
-            $fechaAhora = new \DateTime('', new \DateTimeZone($this->container->getParameter('timezone')));
+            $fechaAhora = new \DateTime('');
             
             $fecha = $prereserva->getFecha();
             $fecha->setTime($prereserva->getHoraInicio()->format("H"), $prereserva->getHoraInicio()->format("i"), 0);

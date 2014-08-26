@@ -419,9 +419,21 @@ class ReunionController extends Controller
          * y aceptaremos esta
          */
 
-        $reunion->aceptarPreReserva($prereserva->getId(), true);
+        //Ejecución transaccional
+        $em->getConnection()->beginTransaction();
+        try {
+            $reunion->aceptarPreReserva($prereserva->getId(), true);
+        }
+        catch (\Exception $e) {
+            $em->getConnection()->rollback();
+            $em->close();
+            throw $e;
+        }
 
         $em->flush();
+        $em->getConnection()->commit();
+        
+        //Fin de la transacción
         
         //Por último, avisamos de la aceptación
         $this->avisaAceptacion($reunion, $request);
@@ -466,7 +478,7 @@ class ReunionController extends Controller
      * @param array $preReservas
      * @return array $mensajes Los mensajes de error encontrados o un array vacío si todo ha salido bien
      */
-    private function checkPreReservas(Request $request, \Doctrine\Common\Collections\ArrayCollection $preReservas)
+    private function checkPreReservas(Request $request, $preReservas)
     {
         $mensajes = array();
         
@@ -597,7 +609,7 @@ class ReunionController extends Controller
                     'nombre' => $entity->getNombrePublico(),
                     'invitado' => $invitado->getNombre(),
                     'creador' => $entity->getCreador(),
-                    'enlace' => $this->generateUrl('voto_show', array('voto' => $entity->getPrereservaAceptada()->getId()))
+                    'enlace' => $this->generateUrl('voto_show', array('id' => $entity->getId()))
                 )
             );
         }

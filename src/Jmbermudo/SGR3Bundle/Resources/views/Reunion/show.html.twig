@@ -54,7 +54,9 @@
                         {% trans %}reunion.descripcion{% endtrans %}:
                     </div>
                     <div class="row ">
+                        <div class="descripcion">
                         {{ reunion.descripcion }}
+                        </div>
                     </div>
                     
                     <div class="col-lg-12"><hr/></div>
@@ -126,7 +128,15 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><a href="{{ path('reunion_aceptar_prereserva_action', {'idPreReserva': prereserva.id}) }}"><span class="label label-warning">{% trans %}preReserva.forzarAceptar{% endtrans %}</span></a></td>
+                                        <td>
+                                            {% if prereserva.aceptada %}
+                                                <span class="label label-success">{% trans %}preReserva.aceptada{% endtrans %}</span>
+                                            {% else %}
+                                                {% if not prereserva.haExpirado %}
+                                                    <a href="{{ path('reunion_aceptar_prereserva_action', {'idPreReserva': prereserva.id}) }}"><span class="label label-warning">{% trans %}preReserva.forzarAceptar{% endtrans %}</span></a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                     {% endfor %}
 
@@ -146,7 +156,7 @@
     </div>
     
         {% if reunion.editable %}
-            <a href="{{ path('reunion_index') }}" class="btn btn-info add_link"><i class="glyphicon glyphicon-plus-sign"></i> {% trans %}global.editar{% endtrans %}</a>
+            <a href="{{ path('reunion_edit', {'id': reunion.id}) }}" class="btn btn-info add_link"><i class="glyphicon glyphicon-plus-sign"></i> {% trans %}global.editar{% endtrans %}</a>
         {% endif %}
     
 {% endblock %}
