@@ -24,6 +24,9 @@
         "jms/i18n-routing-bundle": "dev-master",
         "twig/extensions": "1.0.*@dev"
     },
+    "require-dev": {
+        "webfactory/exceptions-bundle": "@stable"
+    },
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",

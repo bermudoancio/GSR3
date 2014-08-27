@@ -10,7 +10,6 @@ return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Symfony\\Component\\Icu\\' => array($vendorDir . '/symfony/icu'),
     'Symfony\\Bundle\\SwiftmailerBundle' => array($vendorDir . '/symfony/swiftmailer-bundle'),
-    'Symfony\\Bundle\\MonologBundle' => array($vendorDir . '/symfony/monolog-bundle'),
     'Symfony\\Bundle\\AsseticBundle' => array($vendorDir . '/symfony/assetic-bundle'),
     'Symfony\\' => array($vendorDir . '/symfony/symfony/src'),
     'Stof\\DoctrineExtensionsBundle' => array($vendorDir . '/stof/doctrine-extensions-bundle'),
