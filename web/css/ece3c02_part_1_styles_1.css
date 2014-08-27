@@ -7981,3 +7981,16 @@ button.close {
 .btn-group .btn-primary.active {
   background-color: #759E1A;
 }
+
+/* line 77, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.panel-body .row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* line 82, D:/wamp/www/sgr3/SGR3/src/Jmbermudo/SGR3Bundle/Resources/public/sass/sass/styles.scss */
+.descripcion {
+  margin: 2%;
+  background-color: #CCC;
+  border: 1px solid #888;
+}

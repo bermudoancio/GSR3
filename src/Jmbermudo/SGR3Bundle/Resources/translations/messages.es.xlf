@@ -400,6 +400,22 @@
                 <source>voto.votacionOK</source>
                 <target>Tu votación ha sido registrada correctamente</target>
             </trans-unit>
+            <trans-unit id="5000">
+                <source>error.404</source>
+                <target>La página a la que intentas acceder no existe</target>
+            </trans-unit>
+            <trans-unit id="5001">
+                <source>error.403</source>
+                <target>No tienes permiso para ver la página:</target>
+            </trans-unit>
+            <trans-unit id="5002">
+                <source>error.500</source>
+                <target>Ha ocurrido un error:</target>
+            </trans-unit>
+            <trans-unit id="5003">
+                <source>error.error</source>
+                <target>Error</target>
+            </trans-unit>
             
         </body>
     </file>

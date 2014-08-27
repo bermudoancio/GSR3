@@ -1,0 +1,14 @@
+{% extends '::base_error.html.twig' %}
+
+{% block content %}
+
+{{ parent() }}
+
+{% trans %}error.500{% endtrans %}
+<br/>
+
+<div class="alert alert-warning" role="alert">
+{{ status_text }}
+</div>
+
+{% endblock content %}

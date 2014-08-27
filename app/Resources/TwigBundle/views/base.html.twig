@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}{% trans %}global.title{% endtrans %}{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        
+        {% stylesheets 'bundles/jmbermudosgr3/css/*' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        
+        {# Plugins y funciones del dashboard #}
+        {% stylesheets 'bundles/jmbermudosgr3/css/fonts/font-awesome/css/font-awesome.min.css' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+            
+{#        {% stylesheets 'bundles/jmbermudosgr3/css/sbadmin/plugins/timeline/timeline.css' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}#}
+            
+        {# La hoja de estilos del dashboard tiene que incluirse después de los plugins #}
+        {% stylesheets 'bundles/jmbermudosgr3/css/sbadmin/*' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+        {# Fin de plugins y funciones del dashboard #}
+                
+        {% block stylesheets %}{% endblock %}            
+        
+        {% javascripts 'bundles/jmbermudosgr3/js/jquery-1.11.0.min.js' %}
+            <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+            
+        {% javascripts 'bundles/jmbermudosgr3/js/general/*' %}
+            <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}           
+           
+        {% block javascripts_block %}{% endblock %}
+        
+    </head>
+    <body>
+        
+        <div id="wrapper">
+        {% block body %}
+            
+        {% include "navegation.html.twig" %}
+        
+        
+        {% if app.user and is_granted("IS_AUTHENTICATED_REMEMBERED") %}<div id="page-wrapper">{% endif %}
+            {% for type, messages in app.session.flashbag.all() %}
+                {% for message in messages %}
+                    <div class="bs-callout bs-callout-{{ type }}">
+                        <h4>{{ message }}</h4>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{ block('title') }}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+            {% block content %}
+
+            {% endblock content%}
+                    
+        {% if app.user and is_granted("IS_AUTHENTICATED_REMEMBERED") %}</div>{% endif %}
+            
+            
+        {% endblock body%}
+        </div>
+        <!-- /#wrapper -->
+
+        {% block javascripts_bottom %}
+            {# Plugins y funciones para el dashboard #}
+            {% javascripts 'bundles/jmbermudosgr3/js/sbadmin/plugins/metisMenu/jquery.metisMenu.js' %}
+                <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+                
+            {# Por último cargamos el js del dashboard en sí #}
+            {% javascripts 'bundles/jmbermudosgr3/js/sbadmin/*' %}
+                <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endblock %}
+    </body>
+</html>
